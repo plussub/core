@@ -1,5 +1,5 @@
 {
-  "name": "plussub-app-element",
+  "name": "plussub-core",
   "homepage": "https://github.com/plussub/app-element",
   "authors": [
     "stefan <stefan.breitenstein@gmail.com>"
@@ -33,7 +33,6 @@
     "selectize": "^0.12.4",
     "jquery": "^3.2.1",
     "iron-image": "PolymerElements/iron-image#^2.0.0",
-    "paper-slider": "PolymerElements/paper-slider#^2.0.0",
-
+    "paper-slider": "PolymerElements/paper-slider#^2.0.0"
   }
 }
