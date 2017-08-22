@@ -33,6 +33,7 @@
     "selectize": "^0.12.4",
     "jquery": "^3.2.1",
     "iron-image": "PolymerElements/iron-image#^2.0.0",
-    "paper-slider": "PolymerElements/paper-slider#^2.0.0"
+    "paper-slider": "PolymerElements/paper-slider#^2.0.0",
+    "redux": "https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js"
   }
 }
