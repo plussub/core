@@ -1,0 +1,12 @@
+<link rel="import" href="../../../../polymer/polymer.html">
+<link rel="import" href="movie-option.html">
+<link rel="import" href="../selectize-wrapper/selectize-wrapper.html">
+<link rel="import" href="../../../../plussub-channel-behavior/channel-behaviors.html">
+
+<dom-module id="movie-selectize">
+    <template>
+        <selectize-wrapper id="movieSelection" placeholder="Select a movie" value-field="valueField" label-field="Title" search-field="Title" renderer="movie-option" load-fn="[[_computeLoadFn()]]" current-selected="{{currentSelected}}">
+        </selectize-wrapper>
+    </template>
+    <script src="movie-selectize.js"></script>
+</dom-module>

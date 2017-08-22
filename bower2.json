@@ -1,0 +1,39 @@
+{
+  "name": "plussub-app-element",
+  "homepage": "https://github.com/plussub/app-element",
+  "authors": [
+    "stefan <stefan.breitenstein@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "messagebus": "plussub/messagebus#^1.0.1",
+    "plussub-channel-behavior":"^1.0.0",
+    
+    "polymer": "Polymer/polymer#^2.0.1",
+    "paper-fab": "PolymerElements/paper-fab#^2.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^2.0.0",
+    "paper-input": "PolymerElements/paper-input#^2.0.0",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0",
+    "paper-expansion-panel": "Collaborne/paper-expansion-panel#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "moment": "^2.17.1",
+    "paper-radio-group": "PolymerElements/paper-radio-group#^2.0.0",
+    "paper-toast": "PolymerElements/paper-toast#^2.0.0",
+    "selectize": "^0.12.4",
+    "jquery": "^3.2.1",
+    "iron-image": "PolymerElements/iron-image#^2.0.0",
+    "paper-slider": "PolymerElements/paper-slider#^2.0.0",
+
+  }
+}
