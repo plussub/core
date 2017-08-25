@@ -21,21 +21,6 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
         //     });
         // });
 
-
-        // META_CHANNEL.subscribe({
-        //     topic: "user.play.offsetTime",
-        //     callback: (_delayedTime) => {
-        //         if (delayedTime === _delayedTime) {
-        //             return;
-        //         }
-        //         removeAll(cues);
-        //         delayedTime = _delayedTime;
-        //         addCuesToVideos(videoList, cues, delayedTime);
-        //
-        //     }
-        // });
-
-
         const processedCssTag = "containsPlusSubSubtitle";
         let allCreatedTracks = [];
 
@@ -44,7 +29,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
         });
 
         function processVideos(subtitle, videos) {
-            if( subtitle.id ===-1){
+            if (subtitle.id === -1) {
                 disableAllCreatedTracks();
                 return;
             }
@@ -66,7 +51,7 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
                 }
                 video.classList.add(subtitle.id);
 
-                Array.from(video.textTracks).forEach(track => track.mode="hidden");
+                Array.from(video.textTracks).forEach(track => track.mode = "hidden");
 
                 return addCuesToVideo(video, cues);
             });
@@ -88,7 +73,8 @@ srtPlayer.VTTInjectService = srtPlayer.VTTInjectService || (async () => {
             });
         }
 
-        function addCuesToVideo(video, cues, title="?") {
+        function addCuesToVideo(video, cues, title = "?") {
+            console.warn("add cues");
             const track = video.addTextTrack("subtitles", `Plugin: Plussub (${title})`, "en");
             cues.forEach(cue => track.addCue(cue));
             track.mode = 'showing';

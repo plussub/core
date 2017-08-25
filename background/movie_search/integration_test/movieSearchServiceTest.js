@@ -7,7 +7,7 @@ var expect = require('chai').expect;
 var requirejs = require('requirejs');
 var messageBus = require('../../../messagebus/MessageBus.js');
 var nodeFetch = require('node-fetch');
-var root = require('../MovieInformationService.js');
+var root = require('../MovieSearchService.js');
 var Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
 
 
@@ -19,7 +19,7 @@ describe('Movie Information Service', ()=> {
     beforeEach(() => {
         messageBus.reset();
         SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
-        movieInformationService = root.srtPlayer.MovieInformationService(messageBus,nodeFetch);
+        movieInformationService = root.srtPlayer.MovieSearchService(messageBus,nodeFetch);
     });
 
 
@@ -28,7 +28,7 @@ describe('Movie Information Service', ()=> {
         this.timeout(20000);
 
         SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.PUB.SEARCH_RESULT,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFO.PUB.SEARCH_RESULT,
             callback: (result) => {
                 "use strict";
                 expect(result.length).to.be.above(0);
@@ -37,7 +37,7 @@ describe('Movie Information Service', ()=> {
         });
 
         SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFORMATION.SUB.SEARCH,
+            topic: root.srtPlayer.Descriptor.SERVICE.MOVIE_INFO.SUB.SEARCH,
             data: "Pulp Fiction"
         });
     });

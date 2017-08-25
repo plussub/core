@@ -3,7 +3,7 @@ class PlussubOptionElement extends Polymer.Element {
         return "plussub-option";
     }
 
-    async ready() {
+    ready() {
 
         super.ready();
         let previousLoadedCss = "";
@@ -13,14 +13,13 @@ class PlussubOptionElement extends Polymer.Element {
             let css = srtPlayer.Redux.getState().option.css;
             if(previousLoadedCss !== css){
                 previousLoadedCss = css;
-                this.css = css;
+                this._setCss(css);
             }
 
             let subtitleProperties = srtPlayer.Redux.getState().option.subtitleProperties;
             if(JSON.stringify(previousLoadedSubtitleProperties)!==JSON.stringify(subtitleProperties)){
                 previousLoadedSubtitleProperties = subtitleProperties;
-                Object.assign(this.cue, subtitleProperties);
-                ["line","position","size","align", "vertical"].forEach((path)=>this.notifyPath(`cue.${path}`));
+                this._setSubtitleProperties(subtitleProperties);
             }
         });
     }
@@ -51,6 +50,15 @@ class PlussubOptionElement extends Polymer.Element {
                 }
             }
         }
+    }
+
+    _setCss(css){
+        this.css=css;
+    }
+
+    _setSubtitleProperties(properties){
+        Object.assign(this.cue, properties);
+        ["line","position","size","align", "vertical"].forEach((path)=>this.notifyPath(`cue.${path}`));
     }
 
     static changeCssAction(css = "") {

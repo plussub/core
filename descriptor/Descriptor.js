@@ -6,20 +6,20 @@ if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
 }
 
-srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
+srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
 
-        function addSubscriberAndPublisherToSingletons(definition){
-            if(definition._SUB) {
+        function addSubscriberAndPublisherToSingletons(definition) {
+            if (definition._SUB) {
                 definition.SUB = {};
-                Object.keys(definition._SUB).map(key=> {
+                Object.keys(definition._SUB).map(key => {
                     var entry = {};
                     entry[key] = definition.NAME + definition._SUB[key];
                     return entry;
                 }).forEach(entry => Object.assign(definition.SUB, entry));
             }
-            if(definition._PUB) {
+            if (definition._PUB) {
                 definition.PUB = {};
-                Object.keys(definition._PUB).map(key=> {
+                Object.keys(definition._PUB).map(key => {
                     var entry = {};
                     entry[key] = definition.NAME + definition._PUB[key];
                     return entry;
@@ -27,7 +27,7 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
             }
         }
 
-        var channels =  {
+        var channels = {
             META: 'meta',
             META_WRITE: 'metaWrite',
             GENERAL_SERVICE: 'general',
@@ -36,19 +36,75 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
         };
 
         var definition = {
-            GENERAL_SERVICE:{
+            GENERAL_SERVICE: {
                 CHANNEL_LOG_SERVICE: {
                     NAME: 'channelLogService'
                 }
             },
 
-            OPTION:{
-                OPTION:{
+            OPTION: {
+                OPTION: {
                     NAME: 'option',
+                    _PUB: {
+                        CSS: ".css",
+                        SUBTITLE_PROPERTIES: ".subtitleProperty",
+                        RESET: ".reset"
+                    }
+                }
+            },
+
+            MOVIE_SEARCH:{
+                MOVIE_SEARCH:{
+                    NAME:"movieSearch",
                     _PUB:{
-                        CSS:".css",
-                        SUBTITLE_PROPERTIES:".subtitleProperty",
+                        SEARCH:".search",
+                        RESULT:".result",
+                        SET_SELECTED:".setSelected"
+                    }
+                }
+            },
+
+            SUBTITLE_SEARCH:{
+                SUBTITLE_SEARCH:{
+                    NAME:"subtileSearch",
+                    _PUB:{
+                        SEARCH_VIA_IMDB:".searchImdb",
+                        SEARCH_VIA_LANGUAGE:".searchLang",
+                        RESULT:".result",
+                        DOWNLOAD:".download",
+                        SET_SELECTED:".setSelected"
+                    }
+                }
+            },
+
+            MOVIE_INFO: {
+                MOVIE_INFO: {
+                    NAME: "movieInfo",
+                    _PUB: {
+                        SET: ".set",
                         RESET:".reset"
+                    }
+                }
+            },
+
+            SUBTITLE: {
+                PARSER: {
+                    NAME: 'parserService',
+                    _PUB: {
+                        PARSED: '.parsed',
+                        PARSE: '.parse'
+                    }
+                },
+                OFFSET_TIME: {
+                    NAME: 'subtitleOffset',
+                    _PUB: {
+                        VALUE: ".value"
+                    }
+                },
+                REMOVE: {
+                    NAME: 'remove',
+                    _PUB: {
+                        CURRENT_SUBTITLE: ".currentSubtitle"
                     }
                 }
             },
@@ -57,7 +113,7 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
                 META: {
                     NAME: 'metaService',
                     _SUB: {
-                        PUBLISH:'.publish',
+                        PUBLISH: '.publish',
                         PUBLISH_ALL: '.publishAll',
                         RESET: '.reset',
                         FULL_TOPIC_RESET: '.fullTopicReset'
@@ -67,7 +123,7 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
                     }
                 },
 
-                MOVIE_INFORMATION: {
+                MOVIE_INFO: {
                     NAME: 'movieInformationService',
                     _SUB: {
                         SEARCH: '.search'
@@ -95,11 +151,11 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
                         PARSE: '.parse',
                         RESET: '.reset'
                     },
-                    _PUB:{
+                    _PUB: {
                         PARSED: '.parsed'
                     }
                 },
-                NOTIFICATION:{
+                NOTIFICATION: {
                     NAME: 'notificationService',
                     _SUB: {
                         NOTIFY: '.notify',
@@ -124,16 +180,16 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
                     }
                 },
 
-                CSS_INJECT:{
+                CSS_INJECT: {
                     NAME: 'cssInjectService'
                 },
 
-                VTT_INJECT:{
+                VTT_INJECT: {
                     NAME: 'vttInjectService'
                 },
 
-                BACKGROUND_AVAILABILITY:{
-                    NAME:'backgroundAvailabilityService'
+                BACKGROUND_AVAILABILITY: {
+                    NAME: 'backgroundAvailabilityService'
                 }
             }
         };
@@ -143,7 +199,7 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (()=> {
                 addSubscriberAndPublisherToSingletons(definition[serviceKey][key])
             )
         );
-        definition['CHANNEL']=channels;
+        definition['CHANNEL'] = channels;
 
         return definition;
 

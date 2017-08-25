@@ -2,30 +2,26 @@
  * Created by sbreitenstein on 19/01/17.
  */
 
-class PlussubCurrentLoadedSubtitleInfoElement extends Polymer.mixinBehaviors([tms.MetaChannelBehavior, tms.ServiceChannelBehavior], Polymer.Element) {
+class PlussubCurrentLoadedSubtitleInfoElement extends Polymer.Element {
     static get is() {
         return "current-loaded-subtitle-info";
     }
 
-    async ready() {
-        tms.ServiceChannelBehavior.ready.apply(this);
-        tms.MetaChannelBehavior.ready.apply(this);
-
-        this.addEventListener("refreshSubtitle",this.onRefreshSubtitle);
-        this.addEventListener("resetSubtitle",this.onResetSubtitle);
-
+    ready() {
         super.ready();
-        //polymer does not like async functions, so do special stuff after call super.ready
-
-        await this.onMetaReady();
-        let [lastSelected] = await Promise.all(Array.of(this.resolveMeta("last_selected.entry")));
-
-        if (!lastSelected || Object.keys(lastSelected).length===0) {
-            return;
-        }
-
-        this.setInformation(lastSelected);
         // this.$.paperExpansionPanel.opened=true;
+
+        let previousId = -1;
+
+        srtPlayer.Redux.subscribe(()=>{
+            let movieInfo = srtPlayer.Redux.getState().movieInfo;
+            if(previousId !== movieInfo.id){
+                previousId =  movieInfo.id;
+                this._setMovieInfo(movieInfo)
+            }
+        });
+
+        // this.setInformation(lastSelected);
 
     }
 
@@ -46,30 +42,25 @@ class PlussubCurrentLoadedSubtitleInfoElement extends Polymer.mixinBehaviors([tm
         }
     }
 
-    onRefreshSubtitle (event) {
-        this.setInformation(event.detail);
+    static removeLoadedSubtitleAction(){
+        return {
+            type: srtPlayer.Descriptor.SUBTITLE.REMOVE.PUB.CURRENT_SUBTITLE,
+            meta: "appPage"
+        };
     }
 
-    setInformation(data){
-        if(data.type==='selection') {
-            this.title = data.subtitle.movieTitle;
-            this.poster= data.movie.Poster;
-            this.type="Selection";
-        }
-        else if(data.type==='fileinput'){
-            this.title=data.title;
-            this.poster=null;
-            this.type="File input";
-
-        }
+    static resetMovieInfoAction(){
+        return {
+            type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.RESET,
+            meta: "appPage"
+        };
     }
 
-    onResetSubtitle (event) {
-        if (!this.currentSelectionElement || this.currentSelectionElement !== event.detail.selectionElement) {
-            return;
-        }
-
-        this._reset();
+    _setMovieInfo(info){
+        this.title = info.title;
+       // this.poster= data.movie.Poster;
+        this.poster= info.poster;
+        this.type=info.src;
     }
 
     manualReset(){
@@ -81,10 +72,11 @@ class PlussubCurrentLoadedSubtitleInfoElement extends Polymer.mixinBehaviors([tm
         this.type = '';
         this.title = '-';
         this.poster= null;
-        this.servicePublish({
-            topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-            data: 'last_selected'
-        });
+
+
+        srtPlayer.Redux.dispatch(PlussubCurrentLoadedSubtitleInfoElement.removeLoadedSubtitleAction());
+        srtPlayer.Redux.dispatch(PlussubCurrentLoadedSubtitleInfoElement.resetMovieInfoAction());
+
     }
 
 }

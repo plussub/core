@@ -9,6 +9,7 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
 
     ready() {
         super.ready();
+
         $(this.$.selectize).selectize({
             valueField: this.valueField,
             labelField: this.labelField,
@@ -18,20 +19,20 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
             highlight: false,
             persist: false,
             maxOptions: this.maxOptions,
-            loadThrottle: 1000,
             render: {
                 option: (item) => Object.assign(document.createElement(this.renderer), {item: item})
             },
             loadingClass: 'loading',
-            onChange: (data) => {
-                data = data === '' ? {} : data;
-                this.set('currentSelected', typeof data === 'string' ? JSON.parse(data) : data);
-            },
+            onChange: this.onChangeFn !== null ? this.onChangeFn.bind(this.parentNode) : null,
+            onType:this.onTypeFn !== null ? this.onTypeFn.bind(this.parentNode) : null,
+            onItemAdd:this.onItemAddFn !== null ? this.onItemAddFn.bind(this.parentNode) : null,
             load: this.loadFn !== null ? this.loadFn.bind(this.parentNode) : null
         });
 
         this.selectize = $(this.$.selectize)[0].selectize;
         this.selectize.updatePlaceholder();
+
+
     }
 
     static get properties() {
@@ -91,17 +92,35 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
                 type: Object,
                 value: () => {
                 },
+            },
+
+            onChangeFn:{
+                type:Function,
+                value:null
+            },
+
+            onTypeFn:{
+                type:Function,
+                value:null
+            },
+
+            onItemAddFn:{
+                type:Function,
+                value:null
             }
         }
     }
 
+    loadingActive(isLoading){
+        this.$.spinner.active=isLoading;
+    }
 
     addOption(option) {
         this.selectize.addOption(option);
     }
 
-    addItem(item) {
-        this.selectize.addItem(item);
+    addItem(item,silent=false) {
+        this.selectize.addItem(item,silent);
     }
 
     clearOptions() {
@@ -110,7 +129,7 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
         }
     }
 
-    clear(silent) {
+    clear(silent=false) {
         this.selectize.clear(silent)
     }
 
@@ -134,17 +153,16 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
         this.selectize.trigger(event);
     }
 
-    onSearchChange(searchValue) {
-        this.selectize.setTextboxValue(searchValue);
-        this.selectize.onSearchChange(searchValue);
-    }
-
     load(values) {
         this.selectize.load((fn) => fn(values));
     }
 
     getOptions() {
-        this.selectize.options;
+        return this.selectize.options;
+    }
+
+    getItems() {
+        return this.selectize.items;
     }
 
     getWrapped() {

@@ -9,69 +9,44 @@ if (typeof exports !== 'undefined') {
 }
 
 
-srtPlayer.ParserService = srtPlayer.ParserService || ((messageBusLocal = messageBus) => {
-
-        var SERVICE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.SERVICE);
-        var META_WRITE_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META_WRITE);
-        var META_CHANNEL = messageBusLocal.channel(srtPlayer.Descriptor.CHANNEL.META);
-
-        var SERVICE_CONST = srtPlayer.Descriptor.SERVICE.PARSER;
-        SERVICE_CHANNEL.subscribe({
-            topic: SERVICE_CONST.SUB.PARSE,
-            callback: (data) => {
-                if (data.type !== 'srt') {
-                    console.error("unknown subtitle type: %s", data.type);
-                    throw 'unknown type';
-                }
-
-                let parsedSubtitle = srtPlayer.SRTParser().parse(data.raw);
-                srtPlayer.Redux.dispatch(parsedSubtitleAction(parsedSubtitle));
-
-
-                META_WRITE_CHANNEL.publish({
-                    topic: 'parsed_subtitle.parsedSubtitle',
-                    data: JSON.stringify(parsedSubtitle)
-                });
-
-                META_WRITE_CHANNEL.publish({
-                    topic: 'parsed_subtitle.isParsed',
-                    data: true
-                });
-            }
-        });
-
-
-        SERVICE_CHANNEL.subscribe({
-            topic: SERVICE_CONST.SUB.RESET,
-            callback: () => {
-                SERVICE_CHANNEL.publish({
-                    topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-                    data: 'parsed_subtitle'
-                });
-            }
-        });
-
-
+srtPlayer.ParserService = srtPlayer.ParserService || (() => {
 
         function parsedSubtitleAction(subtitle = "") {
             return {
-                type: srtPlayer.Descriptor.SERVICE.PARSER.PUB.PARSED,
+                type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSED,
                 payload: {
-                    subtitle:subtitle,
-                    id:guid()
+                    subtitle: subtitle,
+                    id: srtPlayer.GuidService.createGuid()
                 },
                 meta: "backgroundPage"
             };
         }
 
-        function guid() {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
+        srtPlayer.Redux.subscribe(() => {
+            let subtitleState = srtPlayer.Redux.getState().subtitle;
+
+            if (subtitleState.raw.length > 0 && subtitleState.parsed.length === 0) {
+                parse(subtitleState.raw, subtitleState.offsetTime);
             }
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
+
+            if (!subtitleState.offsetTimeApplied) {
+                applyOffset(subtitleState.pastOffsetTime, subtitleState.offsetTime, subtitleState.parsed);
+            }
+
+        });
+
+        function applyOffset(pastOffsetTime, offsetTime, toSubtitle) {
+            let subtitleWithOffset = toSubtitle.map(e => {
+                return {...e, from: e.from - pastOffsetTime + offsetTime, to: e.to - pastOffsetTime + offsetTime};
+            });
+            srtPlayer.Redux.dispatch(parsedSubtitleAction(subtitleWithOffset));
+        }
+
+        function parse(raw, offsetTime) {
+            let parsedSubtitle = srtPlayer.SRTParser().parse(raw).map((e) => {
+                return {...e, from: e.from + offsetTime, to: e.to + offsetTime};
+            });
+            srtPlayer.Redux.dispatch(parsedSubtitleAction(parsedSubtitle));
         }
     });
 
