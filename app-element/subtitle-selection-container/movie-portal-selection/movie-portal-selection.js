@@ -43,7 +43,7 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
                 let index = iso639LanguageList.indexOf(iso639LanguageList.find(e => e.iso639 === subtitleSearch.language));
 
                 this.$.languageSelection.clear(true);//clear means clearItem
-                this.$.languageSelection.addItem(iso639LanguageList[index].valueField,true);
+                this.$.languageSelection.addItem(iso639LanguageList[index].valueField, true);
             }
 
             if (previousSubtitleSearchResultId !== subtitleSearch.resultId) {
@@ -162,16 +162,23 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
             let link = JSON.parse(this.$.subtitleSelection.getItems()[0]).downloadLink;
             let searchResult = srtPlayer.Redux.getState().subtitleSearch.result;
             let index = searchResult.indexOf(searchResult.find(e => e.downloadLink === link));
-            let selectedMovie =srtPlayer.Redux.getState().movieSearch.result[srtPlayer.Redux.getState().movieSearch.selected];
+            let selectedMovie = srtPlayer.Redux.getState().movieSearch.result[srtPlayer.Redux.getState().movieSearch.selected];
 
             srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setSelectedSubtitleSelectionAction(index));
             srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.triggerSubtitleDownloadAction(link));
-
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setMovieInfoAction({
-                id: srtPlayer.GuidService.createGuid(),
-                title:selectedMovie.Title,
-                src: "MoviePortal Selection"
-            }))
+            if (index === -1) {
+                srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setMovieInfoAction({
+                    id: srtPlayer.GuidService.createGuid(),
+                    title: "-",
+                    src: "MoviePortal Selection"
+                }));
+            } else {
+                srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setMovieInfoAction({
+                    id: srtPlayer.GuidService.createGuid(),
+                    title: selectedMovie.Title,
+                    src: "MoviePortal Selection"
+                }));
+            }
         }
     }
 
