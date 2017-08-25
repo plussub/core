@@ -59,7 +59,8 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                     _PUB:{
                         SEARCH:".search",
                         RESULT:".result",
-                        SET_SELECTED:".setSelected"
+                        SET_SELECTED:".setSelected",
+                        RESET:".reset",
                     }
                 }
             },
@@ -72,7 +73,8 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                         SEARCH_VIA_LANGUAGE:".searchLang",
                         RESULT:".result",
                         DOWNLOAD:".download",
-                        SET_SELECTED:".setSelected"
+                        SET_SELECTED:".setSelected",
+                        RESET:".reset",
                     }
                 }
             },
