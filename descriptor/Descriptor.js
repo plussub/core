@@ -29,6 +29,15 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
 
 
         var definition = {
+            RESET:{
+                RESET:{
+                    NAME:"reset",
+                    _PUB:{
+                        ALL:".all"
+                    }
+                }
+            },
+            
             OPTION: {
                 OPTION: {
                     NAME: 'option',

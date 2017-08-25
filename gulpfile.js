@@ -28,6 +28,12 @@ gulp.task('mocha_unit', function() {
         .on('error', gutil.log);
 });
 
+gulp.task('mocha_specific', function() {
+    return gulp.src(['background/parser/test/*.js'], { read: false })
+        .pipe(mocha({ reporter: 'list'}))
+        .on('error', gutil.log);
+});
+
 
 gulp.task('mocha_integration', function() {
     return gulp.src(['**/integration_test/**/*.js'], { read: false })

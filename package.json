@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "del": "^2.2.2",
     "fetch-mock": "^5.9.4",
     "gulp": "^3.9.1",

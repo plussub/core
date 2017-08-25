@@ -1,16 +1,17 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messageBus = null;
     srtPlayer.Descriptor = require('../../descriptor/Descriptor.js').srtPlayer.Descriptor;
+    srtPlayer.Redux = require('../../redux/redux').srtPlayer.Redux;
+    srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;        
 }
 
-srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal = messageBus, fetch = window.fetch) => {
+srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((fetch = window.fetch) => {
 
         let previousQuery = srtPlayer.Redux.getState().movieSearch.query;
-        srtPlayer.Redux.subscribe(() => {
+        let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let movieSearch = srtPlayer.Redux.getState().movieSearch;
-            if (previousQuery !== movieSearch.query) {
+            if (previousQuery !== movieSearch.query && movieSearch.query !== "") {
                 previousQuery = movieSearch.query;
                 loadData(movieSearch.query);
             }
@@ -24,10 +25,7 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal
                     return;
                 }
                 const result = await getMoreInformationFor(createImbdInformationFrom(await response.json()));
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
-                    result:result,
-                    resultId:srtPlayer.GuidService.createGuid()
-                }));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(result));
             } catch (err) {
                 console.error(err);
             }
@@ -46,11 +44,9 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal
             const maxRequestedImdb = 10;
             const imdbResultPartial = imdbResult.slice(0, imdbResult.length > maxRequestedImdb ? maxRequestedImdb : imdbResult.length);
 
-
             return Promise.all(imdbResultPartial.map(async rawImdb => {
                 try {
 
-                    // https://api.themoviedb.org/3/find/tt0111161?api_key=2fc9c70157809ae41eb410087b872530&external_source=imdb_id
                     const response = await (await fetch('https://app.plus-sub.com/movie/information/' + rawImdb.id)).json();
 
 
@@ -93,6 +89,10 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal
                     return {};
                 }
             }));
+        }
+
+        return {
+            shutdown:unsubscribe
         }
     });
 

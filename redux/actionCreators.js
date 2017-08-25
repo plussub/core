@@ -1,6 +1,14 @@
 /**
  * Created by stefa on 25.08.2017.
  */
+var srtPlayer = srtPlayer || {};
+if (typeof exports !== 'undefined') {
+    exports.srtPlayer = srtPlayer;
+    srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
+    srtPlayer.GuidService = require('../background/guid/GuidService').srtPlayer.GuidService;    
+}
+
+
 srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
 
 
@@ -59,7 +67,10 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
             setMovieSearchResult: (searchResult) => {
                 return {
                     type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
-                    payload: searchResult,
+                    payload: {
+                        resultId: srtPlayer.GuidService.createGuid(),
+                        result: searchResult
+                    },
                     meta: "backgroundPage"
                 };
             },
@@ -180,6 +191,13 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                     type: srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME,
                     payload: ms,
                     meta: "contentScript"
+                }
+            },
+
+            resetAll: () => {
+                return {
+                    type: srtPlayer.Descriptor.RESET.RESET.PUB.ALL,
+                    meta: "test"
                 }
             }
         }

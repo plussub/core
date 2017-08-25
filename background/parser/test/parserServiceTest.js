@@ -1,47 +1,173 @@
 var expect = require('chai').expect;
 var requirejs = require('requirejs');
-var messageBus = require('../../../messagebus/MessageBus.js');
 var root = require('../ParserService.js');
+var redux = require('../../../redux/redux.js').srtPlayer.Redux;
+var actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
+
 root.srtPlayer.SRTParser = require('./SrtParserMock.js').srtMock.SRTParserMock;
 var Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
 
 
-describe('ParserService', ()=> {
+describe('ParserService', () => {
 
-    var META_CHANNEL, META_WRITE_CHANNEL, SERVICE_CHANNEL;
     var parserService;
-    beforeEach(()=>{
-        messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
-        META_WRITE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.META_WRITE);
-        parserService = root.srtPlayer.ParserService(messageBus);
+
+    beforeEach(() => {
+        parserService = root.srtPlayer.ParserService();
     });
 
-    it('should notify the metaWriteChannel when subtitle was parsed', (done)=> {
-        META_WRITE_CHANNEL.subscribe({
-            topic: 'parsed_subtitle.parsedSubtitle',
-            callback: (d)=>{
-                "use strict";
-                expect(JSON.parse(d).length).to.equal(3);
+    afterEach(() => {
+        parserService.shutdown();
+        redux.dispatch(actionCreators.resetAll());
+    });
+
+    it('should parse', (done) => {
+
+        let validateResult = (result) => {
+            expect(result.parsed.length).to.equal(3);
+        };
+
+        let alreadyDone = false;
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.id !== -1) {
+                unsubscribe();
+                validateResult(subtitle);
+                if (!alreadyDone) {
+                    done();
+                }
+                alreadyDone = true;
             }
         });
 
-        META_WRITE_CHANNEL.subscribe({
-            topic: 'parsed_subtitle.isParsed',
-            callback: (d)=>{
-                "use strict";
-                expect(d).to.equal(true);
-                done();
+        redux.dispatch(actionCreators.parseRawSubtitle('rawSrtData'));
+
+    });
+
+    it('should set offset', (done) => {
+
+        let expectSubtitle = {
+            id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
+            parsed: [
+                { id: 1, from: 10, to: 15, text: 'firstText' },
+                { id: 2, from: 18, to: 33, text: 'secondText' },
+                { id: 3, from: 45, to: 60, text: 'thirdText' }
+            ],
+            pastOffsetTime: 0,
+            offsetTime: 0,
+            offsetTimeApplied: true,
+            raw: 'rawSrtData'
+        }
+
+        redux.getState().subtitle = expectSubtitle;
+
+        let validateResult = (result) => {
+            expect(result.parsed[0].from).to.equal(18);
+            expect(result.parsed[0].to).to.equal(23);
+
+            expect(result.parsed[1].from).to.equal(26);
+            expect(result.parsed[1].to).to.equal(41);
+
+            expect(result.parsed[2].from).to.equal(53);
+            expect(result.parsed[2].to).to.equal(68);
+        };
+
+        let alreadyDone = false;
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.id !== expectSubtitle.id) {
+                unsubscribe();
+                validateResult(subtitle);
+                if (!alreadyDone) {
+                    done();
+                }
+                alreadyDone = true;
             }
         });
 
+        redux.dispatch(actionCreators.setOffsetTimeForSubtitle(8));
 
-        SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.Descriptor.SERVICE.PARSER.SUB.PARSE,
-            data:{
-                type:'srt',
-                raw:'rawSrtData'
+    });
+
+
+    it('should recognize previous offset time ', (done) => {
+
+        let expectSubtitle = {
+            id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
+            parsed: [
+                { id: 1, from: 10, to: 15, text: 'firstText' },
+                { id: 2, from: 18, to: 33, text: 'secondText' },
+                { id: 3, from: 45, to: 60, text: 'thirdText' }
+            ],
+            pastOffsetTime: 99,
+            offsetTime: 3,
+            offsetTimeApplied: true,
+            raw: 'rawSrtData'
+        }
+
+        redux.getState().subtitle = expectSubtitle;
+
+        let validateResult = (result) => {
+            expect(result.parsed[0].from).to.equal(17);
+            expect(result.parsed[0].to).to.equal(22);
+
+            expect(result.parsed[1].from).to.equal(25);
+            expect(result.parsed[1].to).to.equal(40);
+
+            expect(result.parsed[2].from).to.equal(52);
+            expect(result.parsed[2].to).to.equal(67);
+        };
+
+        let alreadyDone = false;
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.id !== expectSubtitle.id) {
+                unsubscribe();
+                validateResult(subtitle);
+                if (!alreadyDone) {
+                    done();
+                }
+                alreadyDone = true;
             }
         });
+
+        redux.dispatch(actionCreators.setOffsetTimeForSubtitle(10));
+
+    });
+
+    it('should not change any offset if new offset is equal old offset ', (done) => {
+
+        let expectSubtitle = {
+            id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
+            parsed: [
+                { id: 1, from: 10, to: 15, text: 'firstText' }
+            ],
+            pastOffsetTime: 99,
+            offsetTime: 3,
+            offsetTimeApplied: true,
+            raw: 'rawSrtData'
+        }
+
+        redux.getState().subtitle = expectSubtitle;
+
+        let validateResult = (result) => {
+            expect(result.parsed[0].from).to.equal(10);
+            expect(result.parsed[0].to).to.equal(15);
+        };
+
+        let alreadyDone = false;
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.id === expectSubtitle.id) {
+                unsubscribe();
+                validateResult(subtitle);
+                if (!alreadyDone) {
+                    done();
+                }
+                alreadyDone = true;
+            }
+        });
+
+        redux.dispatch(actionCreators.setOffsetTimeForSubtitle(3));
     });
 });

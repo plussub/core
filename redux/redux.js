@@ -1,3 +1,11 @@
+var srtPlayer = srtPlayer || {};
+if (typeof exports !== 'undefined') {
+    exports.srtPlayer = srtPlayer;
+    srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
+    var Redux = require('../../redux/index');
+}
+
+
 srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         let initialState = {
@@ -11,7 +19,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 parsed: [],
                 pastOffsetTime: 0,
                 offsetTime: 0,
-                offsetTimeApplied: false,
+                offsetTimeApplied: true,
                 raw: ""
             },
 
@@ -50,7 +58,10 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         };
 
         function reducers(state = initialState, action) {
+            console.log(action.type);
             switch (action.type) {
+                case srtPlayer.Descriptor.RESET.RESET.PUB.ALL:
+                    return {...state,...initialState}; 
                 case srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND:
                 case srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME:
                     return {...state, videoMeta: contentReducers(state.videoMeta, action)};
@@ -134,7 +145,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                     if (action.payload === state.offsetTime) {
                         return state;
                     }
-
+                    
                     return {
                         ...state,
                         offsetTime: action.payload,
@@ -231,7 +242,9 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             }
         }
 
-        const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState;
+//        const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState;
+        const persistedState = initialState;//localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : initialState;
+        
         let store = Redux.createStore(reducers, persistedState);
 
         store.subscribe(() => {
@@ -241,7 +254,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             //Also currentVideos contains circular dependencies because it is a video-html5 instance;
             state.videoMeta = initialState.videoMeta;
 
-            localStorage.setItem('reduxState', JSON.stringify(state));
+  //          localStorage.setItem('reduxState', JSON.stringify(state));
             // console.warn(state.movieSearch);
             //
             // console.log(state.subtitleSearch);

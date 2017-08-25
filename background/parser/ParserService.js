@@ -4,17 +4,17 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messageBus = null;
     srtPlayer.Descriptor = require('../../descriptor/Descriptor.js').srtPlayer.Descriptor;
+    srtPlayer.Redux = require('../../redux/redux').srtPlayer.Redux;
+    srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;        
 }
 
 
 srtPlayer.ParserService = srtPlayer.ParserService || (() => {
 
 
-        srtPlayer.Redux.subscribe(() => {
+        let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let subtitleState = srtPlayer.Redux.getState().subtitle;
-
             if (subtitleState.raw.length > 0 && subtitleState.parsed.length === 0) {
                 parse(subtitleState.raw, subtitleState.offsetTime);
             }
@@ -38,6 +38,10 @@ srtPlayer.ParserService = srtPlayer.ParserService || (() => {
             });
             srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parsedSubtitle(parsedSubtitle));
         }
+
+        return {
+            shutdown:unsubscribe
+        };
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
