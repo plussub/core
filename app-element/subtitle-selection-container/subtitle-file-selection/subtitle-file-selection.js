@@ -47,22 +47,6 @@ class PlussubSubtitleFileSelectionElement extends Polymer.Element {
         };
     }
 
-    // reset() {
-    //     let form = document.createElement('form');
-    //     Polymer.dom(form).appendChild(this.$.fileInput);
-    //     form.reset();
-    //     Polymer.dom(this.$.container).appendChild(this.$.fileInput);
-    //
-    //     this.servicePublish({
-    //         topic: srtPlayer.Descriptor.SERVICE.META.SUB.FULL_TOPIC_RESET,
-    //         data: 'selected_subtitle_file'
-    //     });
-    //
-    //     this.fire('resetSubtitle', {
-    //         selectionElement: this
-    //     });
-    // }
-
     fileSelected() {
 
         const reader = new FileReader();
