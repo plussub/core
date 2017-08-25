@@ -1,14 +1,12 @@
-class PlussubSubtitleFileSelectionElement extends Polymer.Element {
+class PlussubFileSelectionElement extends Polymer.Element {
 
     static get is() {
-        return "subtitle-file-selection";
+        return "file-selection";
     }
 
     ready() {
         this.classList.add("subtitle-selection-element");
         super.ready();
-
-
     }
 
     static get properties() {
@@ -66,4 +64,4 @@ class PlussubSubtitleFileSelectionElement extends Polymer.Element {
 }
 
 
-customElements.define(PlussubSubtitleFileSelectionElement.is, PlussubSubtitleFileSelectionElement);
+customElements.define(PlussubFileSelectionElement.is, PlussubFileSelectionElement);

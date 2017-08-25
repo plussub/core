@@ -69,12 +69,14 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SEARCH:
                 case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT:
                 case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SET_SELECTED:
+                case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESET:
                     return {...state, movieSearch: movieSearchReducers(state.movieSearch, action)};
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_LANGUAGE:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED:
+                case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET:
                     return {...state, subtitleSearch: subtitleSearchReducers(state.subtitleSearch, action)};
                 default:
                     return state
@@ -174,6 +176,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                         ...state,
                         selected: action.payload
                     };
+                case  srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESET:
+                    return {...state, ...initialState.movieSearch};
                 default:
                     return state;
             }
@@ -220,6 +224,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                     return {...state, downloadLink: action.payload};
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED:
                     return {...state, selected: action.payload};
+                case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET:
+                    return {...state, ...initialState.subtitleSearch};
                 default:
                     return state;
             }
