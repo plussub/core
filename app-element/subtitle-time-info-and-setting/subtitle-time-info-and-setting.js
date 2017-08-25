@@ -39,13 +39,6 @@ class PlussubSubtitleTimeInfoAndSettingElement extends Polymer.Element {
         return unit < 10 ? "0" + unit : unit.toString();
     }
 
-    static setOffsetTimeForSubtitleAction(delay = 0) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE.OFFSET_TIME.PUB.VALUE,
-            payload: delay,
-            meta: "backgroundPage"
-        };
-    }
 
     _setOffsetTime(offsetTime) {
         this.selected = offsetTime >= 0 ? "behind" : "ahead";
@@ -84,7 +77,7 @@ class PlussubSubtitleTimeInfoAndSettingElement extends Polymer.Element {
             Polymer.Async.timeOut.after(1500),
             () => {
                 const multi = this.$.scheduling.selected === 'behind' ? 1 : -1;
-                srtPlayer.Redux.dispatch(PlussubSubtitleTimeInfoAndSettingElement.setOffsetTimeForSubtitleAction(multi * parseInt(newVal, 10)));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setOffsetTimeForSubtitle(multi * parseInt(newVal, 10)));
             }
         );
     }

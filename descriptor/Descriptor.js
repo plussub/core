@@ -27,21 +27,8 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
             }
         }
 
-        var channels = {
-            META: 'meta',
-            META_WRITE: 'metaWrite',
-            GENERAL_SERVICE: 'general',
-            SERVICE: 'backend',
-            CONTENT_SERVICE: 'content'
-        };
 
         var definition = {
-            GENERAL_SERVICE: {
-                CHANNEL_LOG_SERVICE: {
-                    NAME: 'channelLogService'
-                }
-            },
-
             OPTION: {
                 OPTION: {
                     NAME: 'option',
@@ -111,61 +98,6 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                 }
             },
 
-            SERVICE: {
-                META: {
-                    NAME: 'metaService',
-                    _SUB: {
-                        PUBLISH: '.publish',
-                        PUBLISH_ALL: '.publishAll',
-                        RESET: '.reset',
-                        FULL_TOPIC_RESET: '.fullTopicReset'
-                    },
-                    _PUB: {
-                        READY: '.ready'
-                    }
-                },
-
-                MOVIE_INFO: {
-                    NAME: 'movieInformationService',
-                    _SUB: {
-                        SEARCH: '.search'
-                    },
-                    _PUB: {
-                        SEARCH_RESULT: '.searchResult'
-                    }
-                },
-
-                SUBTITLE_PROVIDER: {
-                    NAME: 'SubtitleProvider',
-                    _SUB: {
-                        SEARCH: '.search',
-                        DOWNLOAD: '.download'
-                    },
-                    _PUB: {
-                        SEARCH_RESULT: '.searchResult',
-                        DOWNLOAD_RESULT: '.downloadResult'
-                    }
-                },
-
-                PARSER: {
-                    NAME: 'parserService',
-                    _SUB: {
-                        PARSE: '.parse',
-                        RESET: '.reset'
-                    },
-                    _PUB: {
-                        PARSED: '.parsed'
-                    }
-                },
-                NOTIFICATION: {
-                    NAME: 'notificationService',
-                    _SUB: {
-                        NOTIFY: '.notify',
-                    }
-                }
-
-            },
-
             CONTENT_SERVICE: {
                 FIND_VIDEO: {
                     NAME: 'findVideoService',
@@ -201,8 +133,6 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                 addSubscriberAndPublisherToSingletons(definition[serviceKey][key])
             )
         );
-        definition['CHANNEL'] = channels;
-
         return definition;
 
 

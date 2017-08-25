@@ -16,14 +16,6 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal
             }
         });
 
-        function setMovieSearchResultAction(searchResult) {
-            return {
-                type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
-                payload: searchResult,
-                meta: "backgroundPage"
-            };
-        }
-
         async function loadData(query) {
             try {
                 const response = await fetch('https://app.plus-sub.com/movie/search/' + decodeURIComponent(query));
@@ -32,7 +24,7 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((messageBusLocal
                     return;
                 }
                 const result = await getMoreInformationFor(createImbdInformationFrom(await response.json()));
-                srtPlayer.Redux.dispatch(setMovieSearchResultAction({
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
                     result:result,
                     resultId:srtPlayer.GuidService.createGuid()
                 }));

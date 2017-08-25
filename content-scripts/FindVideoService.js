@@ -20,18 +20,11 @@ srtPlayer.FindVideoService = srtPlayer.FindVideoService || (() => {
                 .filter(video => !video.classList.contains(cssTag))
                 .forEach(video => {
                     video.classList.add(cssTag);
-                    srtPlayer.Redux.dispatch(foundVideoAction(video));
+                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.foundVideo(video));
                 });
         };
         detectNotTaggedVideos();
 
         new MutationObserver(detectNotTaggedVideos).observe(options.observedNodeToDetectedAddedVideos(), {childList: true, subtree: true});
 
-        function foundVideoAction(video = null) {
-            return {
-                type: srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND,
-                payload: video,
-                meta: "contentScript"
-            };
-        }
     });

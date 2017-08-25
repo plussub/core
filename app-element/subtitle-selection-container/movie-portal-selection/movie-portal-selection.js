@@ -72,69 +72,12 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
         }
     }
 
-    static triggerSearchMovieAction(query) {
-        return {
-            type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SEARCH,
-            payload: query,
-            meta: "appPage"
-        };
-    }
-
-    static setSelectedMovieSelectionAction(index) {
-        return {
-            type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SET_SELECTED,
-            payload: index,
-            meta: "appPage"
-        };
-    }
-
-    static triggerSubtitleSearchViaImdbIdAction(imdbid) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB,
-            payload: imdbid,
-            meta: "appPage"
-        };
-    }
-
-    static triggerSubtitleSearchViaLanguageAction(language) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_LANGUAGE,
-            payload: language,
-            meta: "appPage"
-        };
-    }
-
-    static setSelectedSubtitleSelectionAction(index) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED,
-            payload: index,
-            meta: "appPage"
-        };
-    }
-
-    static triggerSubtitleDownloadAction(link) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD,
-            payload: link,
-            meta: "appPage"
-        };
-    }
-
-    static setMovieInfoAction(movieInfo) {
-        return {
-            type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.SET,
-            payload: movieInfo,
-            meta: "appPage"
-        };
-    }
-
-
     _searchMoviesFn() {
         return (value) => {
             this._debouncer = Polymer.Debouncer.debounce(
                 this._debouncer,
                 Polymer.Async.timeOut.after(1500),
-                () => srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.triggerSearchMovieAction(value))
+                () => srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSearchMovie(value))
             );
         }
     }
@@ -145,15 +88,15 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
             let searchResult = srtPlayer.Redux.getState().movieSearch.result;
             let index = searchResult.indexOf(searchResult.find(e => e.imdbID === imdbId));
 
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setSelectedMovieSelectionAction(index));
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.triggerSubtitleSearchViaImdbIdAction(imdbId));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSelectedMovieSelection(index));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleSearchViaImdbId(imdbId));
         }
     }
 
     _selectedLanguageFn() {
         return () => {
             let languageCode = JSON.parse(this.$.languageSelection.getItems()[0]).iso639;
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.triggerSubtitleSearchViaLanguageAction(languageCode));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleSearchViaLanguage(languageCode));
         }
     }
 
@@ -164,16 +107,16 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
             let index = searchResult.indexOf(searchResult.find(e => e.downloadLink === link));
             let selectedMovie = srtPlayer.Redux.getState().movieSearch.result[srtPlayer.Redux.getState().movieSearch.selected];
 
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setSelectedSubtitleSelectionAction(index));
-            srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.triggerSubtitleDownloadAction(link));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSelectedSubtitleSelection(index));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleDownload(link));
             if (index === -1) {
-                srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setMovieInfoAction({
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
                     id: srtPlayer.GuidService.createGuid(),
                     title: "-",
                     src: "MoviePortal Selection"
                 }));
             } else {
-                srtPlayer.Redux.dispatch(PlussubMoviePortalSelectionElement.setMovieInfoAction({
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
                     id: srtPlayer.GuidService.createGuid(),
                     title: selectedMovie.Title,
                     src: "MoviePortal Selection"

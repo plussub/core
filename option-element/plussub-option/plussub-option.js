@@ -61,32 +61,9 @@ class PlussubOptionElement extends Polymer.Element {
         ["line","position","size","align", "vertical"].forEach((path)=>this.notifyPath(`cue.${path}`));
     }
 
-    static changeCssAction(css = "") {
-        return {
-            type: srtPlayer.Descriptor.OPTION.OPTION.PUB.CSS,
-            payload: css,
-            meta: "optionPage"
-        };
-    }
-
-    static changeSubtitlePropertiesAction(properties= {}) {
-        return {
-            type: srtPlayer.Descriptor.OPTION.OPTION.PUB.SUBTITLE_PROPERTIES,
-            payload: properties,
-            meta: "optionPage"
-        };
-    }
-
-    static resetOptionAction() {
-        return {
-            type: srtPlayer.Descriptor.OPTION.OPTION.PUB.RESET,
-            meta: "optionPage"
-        };
-    }
-
     save() {
-        srtPlayer.Redux.dispatch(PlussubOptionElement.changeCssAction(this.css));
-        srtPlayer.Redux.dispatch(PlussubOptionElement.changeSubtitlePropertiesAction({
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.changeCss(this.css));
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.changeSubtitleProperties({
             line: this.cue.line,
             position: this.cue.position,
             size: this.cue.size,
@@ -97,7 +74,7 @@ class PlussubOptionElement extends Polymer.Element {
     }
 
     reset() {
-        srtPlayer.Redux.dispatch(PlussubOptionElement.resetOptionAction());
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.resetOption());
     }
 }
 customElements.define(PlussubOptionElement.is, PlussubOptionElement);

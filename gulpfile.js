@@ -23,14 +23,14 @@ gulp.task('bower',function(){
 });
 
 gulp.task('mocha_unit', function() {
-    return gulp.src(['*/test/*.js'], { read: false })
+    return gulp.src(['**/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });
 
 
 gulp.task('mocha_integration', function() {
-    return gulp.src(['*/integration_test/**/*.js'], { read: false })
+    return gulp.src(['**/integration_test/**/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

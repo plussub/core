@@ -21,45 +21,15 @@ class PlussubAppElement extends Polymer.Element {
         }
     }
 
-    static triggerSubtitleSearchResetAction() {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET,
-            meta: "appPage"
-        };
-    }
-
-    static triggerMovieSearchResetAction() {
-        return {
-            type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESET,
-            meta: "appPage"
-        };
-    }
-
-    static removeLoadedSubtitleAction(){
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE.REMOVE.PUB.CURRENT_SUBTITLE,
-            meta: "appPage"
-        };
-    }
-
-    static resetMovieInfoAction(){
-        return {
-            type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.RESET,
-            meta: "appPage"
-        };
-    }
-
     openSettingsPage() {
         this.openSettings.fn();
     }
 
     reset() {
-
-        srtPlayer.Redux.dispatch(PlussubAppElement.removeLoadedSubtitleAction());
-        srtPlayer.Redux.dispatch(PlussubAppElement.resetMovieInfoAction());
-        srtPlayer.Redux.dispatch(PlussubAppElement.triggerSubtitleSearchResetAction());
-        srtPlayer.Redux.dispatch(PlussubAppElement.triggerMovieSearchResetAction());
-
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.removeLoadedSubtitle());
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.resetMovieInfo());
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleSearchReset());
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerMovieSearchReset());
     }
 }
 

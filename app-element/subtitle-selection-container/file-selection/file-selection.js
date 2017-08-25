@@ -29,22 +29,6 @@ class PlussubFileSelectionElement extends Polymer.Element {
             s4() + '-' + s4() + s4() + s4();
     }
 
-    static parseRawSubtitleAction(raw) {
-        return {
-            type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE,
-            payload: raw,
-            meta: "appPage"
-        };
-    }
-
-    static setMovieInfoAction(movieInfo) {
-        return {
-            type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.SET,
-            payload: movieInfo,
-            meta: "appPage"
-        };
-    }
-
     fileSelected() {
 
         const reader = new FileReader();
@@ -52,13 +36,13 @@ class PlussubFileSelectionElement extends Polymer.Element {
         reader.onload = () => {
             const filename = this.$.fileInput.inputElement.inputElement.files[0].name;
 
-            srtPlayer.Redux.dispatch(PlussubSubtitleFileSelectionElement.setMovieInfoAction({
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
                 id:PlussubSubtitleFileSelectionElement.guid(),
                 title: filename,
                 src:"File selection"
             }));
 
-            srtPlayer.Redux.dispatch(PlussubSubtitleFileSelectionElement.parseRawSubtitleAction(reader.result));
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(reader.result));
         };
     }
 }

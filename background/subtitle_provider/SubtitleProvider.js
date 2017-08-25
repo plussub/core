@@ -27,21 +27,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
             }
         });
 
-        function setSubtitleSearchResultAction(searchResult) {
-            return {
-                type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT,
-                payload: searchResult,
-                meta: "backgroundPage"
-            };
-        }
-
-        function parseRawSubtitleAction(raw) {
-            return {
-                type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE,
-                payload: raw,
-                meta: "backgroundPage"
-            };
-        }
 
         /**
          * data.imdbid -> movie id from imdb
@@ -71,7 +56,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                         downloadLink: entry.SubDownloadLink
                     }));
 
-                srtPlayer.Redux.dispatch(setSubtitleSearchResultAction({
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
                     resultId: srtPlayer.GuidService.createGuid(),
                     result: result.map(entry => Object.assign({}, entry, {valueField: JSON.stringify(entry)}))
                 }));
@@ -90,7 +75,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                     return;
                 }
                 const raw = await pako.inflate(new Uint8Array(await response.arrayBuffer()), {to: "string"});
-                srtPlayer.Redux.dispatch(parseRawSubtitleAction(raw));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(raw));
 
             } catch (err) {
                 console.error();

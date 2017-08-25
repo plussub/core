@@ -34,7 +34,7 @@ srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
                     return;
                 }
                 lastSecond = inSecond;
-                srtPlayer.Redux.dispatch(videoTickAction(inSecond*1000));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.videoTick(inSecond*1000));
             };
 
             listOfDetectedVideos.push({
@@ -46,11 +46,4 @@ srtPlayer.VideoMetaService = srtPlayer.VideoMetaService || (() => {
             video.addEventListener("timeupdate", updateFn, false);
         }
 
-        function videoTickAction(ms = 0) {
-            return {
-                type: srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME,
-                payload: ms,
-                meta: "contentScript"
-            };
-        }
     });
