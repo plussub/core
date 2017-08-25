@@ -135,7 +135,10 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
             setSubtitleSearchResult: (searchResult) => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT,
-                    payload: searchResult,
+                    payload: {
+                        resultId:srtPlayer.GuidService.createGuid(),                        
+                        result:searchResult
+                    },
                     meta: "backgroundPage"
                 };
             },

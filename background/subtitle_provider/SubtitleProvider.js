@@ -1,37 +1,41 @@
 var srtPlayer = srtPlayer || {};
+
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var messageBus = null;
     srtPlayer.Descriptor = require('../../descriptor/Descriptor.js').srtPlayer.Descriptor;
+    srtPlayer.Redux = require('../../redux/redux').srtPlayer.Redux;
+    srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;        
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = messageBus, fetch = window.fetch) => {
+srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetch) => {
 
         let previousImdbId = srtPlayer.Redux.getState().subtitleSearch.imdbId;
         let previousLanguage = srtPlayer.Redux.getState().subtitleSearch.language;
         let previousLink = srtPlayer.Redux.getState().subtitleSearch.downloadLink;
-
-        srtPlayer.Redux.subscribe(() => {
+        
+        let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let subtitleSearch = srtPlayer.Redux.getState().subtitleSearch;
-
             if (previousImdbId !== subtitleSearch.imdbId || previousLanguage !== subtitleSearch.language) {
-                console.log("LOAD SUBTITLE");
                 previousImdbId = subtitleSearch.imdbId;
                 previousLanguage = subtitleSearch.language;
-                search(subtitleSearch.imdbId, subtitleSearch.language);
+               
+                if(subtitleSearch.imdbId !== "" && subtitleSearch.language!==""){
+                    search(subtitleSearch.imdbId, subtitleSearch.language);
+                }
             }
 
             if (previousLink !== subtitleSearch.downloadLink && subtitleSearch.downloadLink !== "") {
                 previousLink = subtitleSearch.downloadLink;
-                download(subtitleSearch.downloadLink);
+                if(subtitleSearch.downloadLink!="") {
+                    download(subtitleSearch.downloadLink);
+                }
             }
         });
 
 
         /**
-         * data.imdbid -> movie id from imdb
-         * data.iso639 -> language code for subtitle
-         * @param data
+         * imdbid -> movie id from imdb
+         * language -> language iso639 code for subtitle
          */
         async function search(imdbId, language = "en") {
 
@@ -56,10 +60,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
                         downloadLink: entry.SubDownloadLink
                     }));
 
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
-                    resultId: srtPlayer.GuidService.createGuid(),
-                    result: result.map(entry => Object.assign({}, entry, {valueField: JSON.stringify(entry)}))
-                }));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult(result.map(entry => Object.assign({}, entry, {valueField: JSON.stringify(entry)}))));
 
             } catch (err) {
                 console.error(err);
@@ -82,6 +83,9 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((messageBusLocal = m
             }
         }
 
+        return {
+            shutdown:unsubscribe
+        }
 
     });
 

@@ -54,11 +54,19 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 tickInMs: 0,
                 foundVideo: false,
                 currentVideos: []
+            },
+
+            debug:{
+                redux:false,
             }
         };
 
         function reducers(state = initialState, action) {
-            console.log(action.type);
+            
+            if(state.debug.redux){
+                console.log(action.type);
+            }
+
             switch (action.type) {
                 case srtPlayer.Descriptor.RESET.RESET.PUB.ALL:
                     return {...state,...initialState}; 

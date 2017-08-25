@@ -23,13 +23,13 @@ gulp.task('bower',function(){
 });
 
 gulp.task('mocha_unit', function() {
-    return gulp.src(['**/test/*.js'], { read: false })
+    return gulp.src(['background/**/test/*.js','descriptor/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });
 
 gulp.task('mocha_specific', function() {
-    return gulp.src(['background/parser/test/*.js'], { read: false })
+    return gulp.src(['background/subtitle_provider/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

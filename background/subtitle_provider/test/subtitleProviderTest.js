@@ -2,17 +2,17 @@ var expect = require('chai').expect;
 var fetchMock = require('fetch-mock');
 var nodeFetch = require('node-fetch');
 var requirejs = require('requirejs');
-var messageBus = require('../../../messagebus/MessageBus.js');
+var redux = require('../../../redux/redux.js').srtPlayer.Redux;
+var actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
 var root = require('../SubtitleProvider.js');
 var Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
 
 
 
-describe('SubtitleProvider', ()=> {
+describe('SubtitleProvider', () => {
 
-    var SERVICE_CHANNEL;
     var subtitleProvider;
-    var BASE_URL='https://0e53p7322m.execute-api.eu-central-1.amazonaws.com/release/subtitle';
+    var BASE_URL = 'https://app.plus-sub.com/subtitle';
 
     var DEFAULT_SUBTITLE_SEARCH_RESULT = [
         {
@@ -135,93 +135,90 @@ describe('SubtitleProvider', ()=> {
 
     var fakeFetch;
 
-    beforeEach(()=> {
-        messageBus.reset();
-        SERVICE_CHANNEL = messageBus.channel(Descriptor.CHANNEL.SERVICE);
+    beforeEach(() => {
         fakeFetch = fetchMock.sandbox();
-        subtitleProvider = root.srtPlayer.SubtitleProvider(messageBus,fakeFetch);
+        subtitleProvider = root.srtPlayer.SubtitleProvider(fakeFetch);
     });
 
-    afterEach(()=>{
-       fakeFetch.reset();
+    afterEach(() => {
+        fakeFetch.reset();
+        subtitleProvider.shutdown();
+        redux.dispatch(actionCreators.resetAll());
     });
 
 
-    it('test happy path', (done)=> {
+    it('should search subtitle', (done) => {
 
         var imdbid = "0110912";
-        var iso639 = "eng";
+        var iso639 = "eng"; //default
 
-        fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, DEFAULT_SUBTITLE_SEARCH_RESULT);
+        fakeFetch.mock(`${BASE_URL}/${imdbid}/${iso639}`, DEFAULT_SUBTITLE_SEARCH_RESULT);
 
-        SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
-            callback: (result) => {
-                "use strict";
-                expect(result.length).to.be.above(0);
-                expect(result[0].movieTitle).to.equal('Pulp Fiction');
+        let validateResult = (result) => {
+            expect(result.length).to.be.above(0);
+            expect(result[0].movieTitle).to.equal('Pulp Fiction');
+        };
+
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            if (!subtitleSearch.isLoading && subtitleSearch.resultId !== -1) {
+                unsubscribe();
+                validateResult(subtitleSearch.result);
                 done();
             }
         });
 
-        SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
-            data: {
-                imdbid:imdbid,
-                iso639:iso639
-            }
-        });
+        redux.dispatch(actionCreators.triggerSubtitleSearchViaImdbId(imdbid))
     });
 
 
-    it('empty result should also notify', (done)=> {
-
+    it('empty result should also notify', (done) => {
+        
         var imdbid = "0110912";
-        var iso639 = "eng";
+        var iso639 = "eng"; //default
 
-        fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, []);
+        fakeFetch.mock(`${BASE_URL}/${imdbid}/${iso639}`, []);
 
-        SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
-            callback: (result) => {
-                "use strict";
-                expect(result.length).to.equal(0);
+        let validateResult = (result) => {
+            expect(result.length).to.equal(0);
+        };
+
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            if (!subtitleSearch.isLoading && subtitleSearch.resultId !== -1) {
+                unsubscribe();
+                validateResult(subtitleSearch.result);
                 done();
             }
         });
 
-        SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
-            data: {
-                imdbid:imdbid,
-                iso639:iso639
-            }
-        });
+        redux.dispatch(actionCreators.triggerSubtitleSearchViaImdbId(imdbid))
     });
 
-    it('bad parameter should produce an error message', (done)=> {
+    it('missing language should not trigger a search', (done) => {
+
+        redux.getState().subtitleSearch.language="";
 
         var imdbid = "0110912";
-        var iso639 = "INVALID";
+        var iso639 = "ger";
 
-        fakeFetch.mock(BASE_URL+'/'+imdbid+'/'+iso639, 400);
+        fakeFetch.mock(`${BASE_URL}/${imdbid}/${iso639}`, []);
 
-        SERVICE_CHANNEL.subscribe({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.PUB.SEARCH_RESULT,
-            callback: (result) => {
-                "use strict";
-                //should never reached, when reached call done multiple times
+        let validateResult = (result) => {
+            expect(result.length).to.equal(0);
+        };
+
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            if (!subtitleSearch.isLoading && subtitleSearch.resultId !== -1) {
+                unsubscribe();
+                validateResult(subtitleSearch.result);
                 done();
             }
         });
 
-        SERVICE_CHANNEL.publish({
-            topic: root.srtPlayer.Descriptor.SERVICE.SUBTITLE_PROVIDER.SUB.SEARCH,
-            data: {
-                imdbid:imdbid,
-                iso639:iso639
-            }
-        });
-        done();
+        redux.dispatch(actionCreators.triggerSubtitleSearchViaImdbId(imdbid));
+        redux.dispatch(actionCreators.triggerSubtitleSearchViaLanguage(iso639))
+        
     });
 });
