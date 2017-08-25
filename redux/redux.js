@@ -160,10 +160,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         function movieSearchReducers(state, action) {
             switch (action.type) {
                 case  srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SEARCH:
-                    console.error("getsearch");
                     return {...state, query: action.payload, isLoading: true, result: [], resultId: -1, selected: -1};
                 case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT:
-                    console.error("getres");
                     return {
                         ...state,
                         isLoading: false,
@@ -185,7 +183,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             switch (action.type) {
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB:
                     if(state.imdbId === action.payload){
-                        return;
+                        return state;
                     }
 
                     return {
@@ -199,7 +197,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                     };
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_LANGUAGE:
                     if(state.language === action.payload){
-                        return;
+                        return state;
                     }
 
                     return {

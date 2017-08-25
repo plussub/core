@@ -16,9 +16,6 @@
     "tests"
   ],
   "dependencies": {
-    "messagebus": "plussub/messagebus#^1.0.1",
-    "plussub-channel-behavior":"^1.0.0",
-    
     "polymer": "Polymer/polymer#^2.0.1",
     "paper-fab": "PolymerElements/paper-fab#^2.0.0",
     "iron-icons": "PolymerElements/iron-icons#^2.0.0",

@@ -1,20 +1,12 @@
 /**
  * Created by stefa on 06.03.2017.
  */
-class PlussubNotificationServiceElement extends Polymer.mixinBehaviors([tms.ServiceChannelBehavior], Polymer.Element) {
+class PlussubNotificationServiceElement extends Polymer.Element {
     static get is() {
         return "notification-service";
     }
 
     async ready() {
-        tms.ServiceChannelBehavior.ready.apply(this);
-
-        this.addEventListener("iron-overlay-closed", this.onToastClose.bind(this));
-        this.serviceSubscribe({
-            topic: srtPlayer.Descriptor.SERVICE.NOTIFICATION.SUB.NOTIFY,
-            callback: this.onNotify.bind(this)
-        });
-
         super.ready();
     }
 
