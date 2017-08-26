@@ -134,7 +134,15 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                 BACKGROUND_AVAILABILITY: {
                     NAME: 'backgroundAvailabilityService'
                 }
-            }
+            },
+            DEBUG:{
+                DEBUG:{
+                    NAME:"debug",
+                    _PUB:{
+                        TOGGLE_CONSOLE:".toggleConsole"
+                    }
+                }
+            },
         };
 
         Object.keys(definition).forEach(serviceKey =>

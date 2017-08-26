@@ -5,7 +5,11 @@ class PlussubAppElement extends Polymer.Element {
     static get is() {
         return "plussub-app";
     }
-
+    
+    ready(){
+        super.ready();
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.sendHeartBeat());
+    }
 
     static get properties() {
         return {
@@ -23,6 +27,10 @@ class PlussubAppElement extends Polymer.Element {
 
     openSettingsPage() {
         this.openSettings.fn();
+    }
+
+    debugConsole() {
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.toggleShowDebugConsole());
     }
 
     reset() {

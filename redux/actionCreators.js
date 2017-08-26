@@ -202,6 +202,20 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                     type: srtPlayer.Descriptor.RESET.RESET.PUB.ALL,
                     meta: "test"
                 }
+            },
+
+            sendHeartBeat: () => {
+                return {
+                    type: "<does not match>",
+                    meta: "test"
+                }
+            },
+
+            toggleShowDebugConsole:()=>{
+                return {
+                    type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE,
+                    meta: "appPage"
+                }
             }
         }
 
