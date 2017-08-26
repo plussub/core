@@ -5,6 +5,7 @@
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (()=>{
 
     return {
-        getInitialState:() => console.log("todo -> get state from background page")
+        getInitialState:() => console.log("todo -> get state from background page"),
+        shouldStoreState:false
     }
 })();

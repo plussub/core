@@ -277,7 +277,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         let store = Redux.createStore(reducers, _initialState);
         store.subscribe(() => {
             let state = Object.assign({}, store.getState());
-            if (typeof localStorage === 'undefined' || state.debug.disableStoreReduxState) {
+            
+            if (!srtPlayer.ReduxConfig.shouldStoreState || state.debug.disableStoreReduxState) {
                 return;
             }
             //It makes no sense to safe founded videos or the current time of the video

@@ -9,6 +9,7 @@ if (typeof exports !== 'undefined') {
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (() => {
 
     return {
-        getInitialState: () => null
+        getInitialState: () => null,
+        shouldStoreState:false
     }
 })();
