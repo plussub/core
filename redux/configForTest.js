@@ -4,12 +4,14 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
+    var Redux = require('../../redux/index');
 }
 
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (() => {
 
     return {
         getInitialState: () => null,
-        shouldStoreState:false
+        shouldStoreState:false,
+        createStore:(reducers,initialState)=>Redux.createStore(reducers, initialState),
     }
 })();

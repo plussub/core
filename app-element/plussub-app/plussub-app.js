@@ -5,24 +5,37 @@ class PlussubAppElement extends Polymer.Element {
     static get is() {
         return "plussub-app";
     }
-    
-    ready(){
-        super.ready();
-        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.sendHeartBeat());
+
+    async ready() {
+
+        srtPlayer.Redux.subscribe(() => {
+            let appState = srtPlayer.Redux.getState().appState;
+            this.$.selectionModePages.selected = appState.selectedMode;
+            this.$.selectionModeTabs.selected = appState.selectedMode;
+            this.selectMode = appState.selectedMode;
+        });
+
+        srtPlayer.Redux.store.ready().then(() => {
+            super.ready();
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.sendHeartBeat());
+        });
     }
 
     static get properties() {
         return {
             selectedMode: {
-                type: String,
-                value: "0",
-                notify: true
+                type: Number,
+                observer: 'onSelectionModeChange'
             },
             openSettings: {
                 type: Object,
                 value: () => Object.assign({fn: () => chrome.tabs.create({url: "/src/html/option.html"})})
             }
         }
+    }
+
+    onSelectionModeChange(newVal) {
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.selectSubtitleSelectionMode(newVal));
     }
 
     openSettingsPage() {

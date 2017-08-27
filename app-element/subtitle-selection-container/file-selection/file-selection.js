@@ -37,7 +37,7 @@ class PlussubFileSelectionElement extends Polymer.Element {
             const filename = this.$.fileInput.inputElement.inputElement.files[0].name;
 
             srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
-                id:PlussubSubtitleFileSelectionElement.guid(),
+                id:PlussubFileSelectionElement.guid(),
                 title: filename,
                 src:"File selection"
             }));

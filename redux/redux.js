@@ -3,14 +3,17 @@ if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
     srtPlayer.ReduxConfig = require('./configForTest').srtPlayer.ReduxConfig;
-
-    var Redux = require('../../redux/index');
 }
 
 
 srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         let initialState = {
+
+            appState:{
+              selectedMode:0
+            },
+
             option: {
                 css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
                 subtitleProperties: {} //cue properties
@@ -59,6 +62,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             },
 
             debug: {
+                messageBridge:true,
                 showDebugConsole: false,
                 redux: false,
                 reduxStore: false,
@@ -75,6 +79,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             switch (action.type) {
                 case srtPlayer.Descriptor.RESET.RESET.PUB.ALL:
                     return {...state, ...initialState};
+                case srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE:
+                    return {...state, appState: appStateReducers(state.appState, action)};
                 case srtPlayer.Descriptor.CONTENT_SERVICE.FIND_VIDEO.PUB.FOUND:
                 case srtPlayer.Descriptor.CONTENT_SERVICE.VIDEO_META.PUB.TIME:
                     return {...state, videoMeta: contentReducers(state.videoMeta, action)};
@@ -104,6 +110,15 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                     return {...state, subtitleSearch: subtitleSearchReducers(state.subtitleSearch, action)};
                 case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE:
                     return {...state, debug: debugReducers(state.debug, action)};
+                default:
+                    return state
+            }
+        }
+
+        function appStateReducers(state,action){
+            switch (action.type) {
+                case srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE:
+                    return {...state, selectedMode: action.payload};
                 default:
                     return state
             }
@@ -266,7 +281,6 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             }
         }
 
-        console.log(srtPlayer.ReduxConfig);
         let _initialState = srtPlayer.ReduxConfig.getInitialState();
         _initialState = _initialState ? _initialState : initialState; 
 
@@ -274,7 +288,13 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             console.log(`load state: ${_initialState}`);
         }
 
-        let store = Redux.createStore(reducers, _initialState);
+        let store = srtPlayer.ReduxConfig.createStore(reducers, _initialState);
+        //fake ready event
+        if(typeof store.ready ==='undefined'){
+            store.ready = () => (async () => "");
+        }
+
+        // let store = wrapStore(Redux.createStore(reducers, _initialState));
         store.subscribe(() => {
             let state = Object.assign({}, store.getState());
             

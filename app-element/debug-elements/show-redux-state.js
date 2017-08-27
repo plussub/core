@@ -13,6 +13,8 @@ class PlussubShowReduxStateElement extends Polymer.Element {
             //It makes no sense to safe founded videos or the current time of the video
             //because, when the app will reloaded, entirely other pages could be loaded.
             //Also currentVideos contains circular dependencies because it is a video-html5 instance;
+           
+           //moep wegen deep copy und so
             state.videoMeta.foundVideo = null;
             state.videoMeta.currentVideos = [];
 

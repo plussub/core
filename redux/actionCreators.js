@@ -216,6 +216,14 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                     type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE,
                     meta: "appPage"
                 }
+            },
+
+            selectSubtitleSelectionMode:(selectedMode)=>{
+                return {
+                    type: srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE,
+                    payload:selectedMode,
+                    meta: "appPage"
+                }
             }
         }
 
