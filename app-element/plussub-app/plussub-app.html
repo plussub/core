@@ -26,11 +26,11 @@
                 <subtitle-time-info-and-setting></subtitle-time-info-and-setting>
 
                 <subtitle-selection-container style="display:flex; flex-direction: column;">
-                    <paper-tabs selected="{{selectedMode}}">
+                    <paper-tabs id="selectionModeTabs" selected="{{selectedMode}}">
                         <paper-tab>Movie Portal</paper-tab>
                         <paper-tab>File</paper-tab>
                     </paper-tabs>
-                    <iron-pages selected="[[selectedMode]]">
+                    <iron-pages id="selectionModePages" selected="[[selectedMode]]">
                         <movie-portal-selection></movie-portal-selection>
                         <file-selection style="height:100%"></file-selection>
                     </iron-pages>

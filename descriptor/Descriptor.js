@@ -29,6 +29,16 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
 
 
         var definition = {
+
+            APP_STATE:{
+                APP_STATE:{
+                    NAME:"appState",
+                    _PUB:{
+                        SELECT_MODE:".selectMode"
+                    }
+                }
+            },
+
             RESET:{
                 RESET:{
                     NAME:"reset",
@@ -121,18 +131,6 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                     _PUB: {
                         TIME: '.time'
                     }
-                },
-
-                CSS_INJECT: {
-                    NAME: 'cssInjectService'
-                },
-
-                VTT_INJECT: {
-                    NAME: 'vttInjectService'
-                },
-
-                BACKGROUND_AVAILABILITY: {
-                    NAME: 'backgroundAvailabilityService'
                 }
             },
             DEBUG:{

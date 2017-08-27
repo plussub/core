@@ -6,7 +6,7 @@ var srtPlayer = srtPlayer || {};
 
 srtPlayer.InitService = srtPlayer.InitService || (async () => {
 
-        await srtPlayer.Redux.store.getReady();
+        await srtPlayer.Redux.store.ready();
         srtPlayer.VTTInjectService();
         srtPlayer.VideoMetaService();
         srtPlayer.CSSInjectService();
