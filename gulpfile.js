@@ -29,7 +29,7 @@ gulp.task('mocha_unit', function() {
 });
 
 gulp.task('mocha_specific', function() {
-    return gulp.src(['background/subtitle_provider/test/*.js'], { read: false })
+    return gulp.src(['background/movie_search/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

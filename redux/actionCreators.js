@@ -64,13 +64,14 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
-            setMovieSearchResult: (searchResult) => {
+            setMovieSearchResult: (searchResult, error) => {
                 return {
                     type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
                     payload: {
                         resultId: srtPlayer.GuidService.createGuid(),
                         result: searchResult
                     },
+                    error:error,
                     meta: "backgroundPage"
                 };
             },

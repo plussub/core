@@ -6,8 +6,20 @@ class PlussubNotificationServiceElement extends Polymer.Element {
         return "notification-service";
     }
 
-    async ready() {
+    ready() {
         super.ready();
+
+        let previousErrors = srtPlayer.Redux.getState().errors;
+        srtPlayer.Redux.subscribe(() => {
+            let errors = srtPlayer.Redux.getState().errors;
+            if(previousErrors.length !== errors.length && errors.length>0){
+                const newErrorsCnt = errors.length-previousErrors.length;
+                this.show({
+                    msg:errors.slice(previousErrors.length,errors.length).reduce((c,p)=> c.message+"\n"+p.message ,{message:""})
+                });
+            }
+            previousErrors = errors;
+        });
     }
 
     static get properties() {
@@ -27,7 +39,7 @@ class PlussubNotificationServiceElement extends Polymer.Element {
         }
     }
 
-    onNotify(payload) {
+    show(payload) {
         this._currentMessage = payload.msg;
         this.$.toast.show();
     }
@@ -36,3 +48,5 @@ class PlussubNotificationServiceElement extends Polymer.Element {
         this._currentMessage = this._placeholderMessage;
     }
 }
+
+customElements.define(PlussubNotificationServiceElement.is, PlussubNotificationServiceElement);

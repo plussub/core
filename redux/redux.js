@@ -10,8 +10,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         let initialState = {
 
-            appState:{
-              selectedMode:0
+            appState: {
+                selectedMode: 0
             },
 
             option: {
@@ -61,8 +61,10 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 currentVideos: []
             },
 
+            errors: [],
+
             debug: {
-                messageBridge:true,
+                messageBridge: true,
                 showDebugConsole: false,
                 redux: false,
                 reduxStore: false,
@@ -76,7 +78,10 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 console.log(action.type);
             }
 
+            var state = {...state, errors: globalErrorHandler(state.errors, action)};
+
             switch (action.type) {
+
                 case srtPlayer.Descriptor.RESET.RESET.PUB.ALL:
                     return {...state, ...initialState};
                 case srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE:
@@ -115,7 +120,20 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             }
         }
 
-        function appStateReducers(state,action){
+        function globalErrorHandler(state, action) {
+
+            if (!action.error) {
+                return state;
+            }
+
+            return [...state, {
+                timestamp: action.error.timestamp,
+                message: action.error.message,
+                src: action.error.src
+            }];
+        }
+
+        function appStateReducers(state, action) {
             switch (action.type) {
                 case srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE:
                     return {...state, selectedMode: action.payload};
@@ -201,6 +219,11 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         }
 
         function movieSearchReducers(state, action) {
+
+            if(action.error){
+                return {...state, ...initialState.movieSearch};
+            }
+
             switch (action.type) {
                 case srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.SEARCH:
                     return {...state, query: action.payload, isLoading: true, result: [], resultId: -1, selected: -1};
@@ -281,8 +304,13 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             }
         }
 
+        //move load fn to own js
+        //use json schema for validation? use strategy pattern to test different approaches
         let _initialState = srtPlayer.ReduxConfig.getInitialState();
-        _initialState = _initialState ? _initialState : initialState; 
+        _initialState = _initialState ? _initialState : initialState;
+
+        //check if all properties exists?
+
 
         if (_initialState.debug.reduxStore) {
             console.log(`load state: ${_initialState}`);
@@ -290,14 +318,13 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         let store = srtPlayer.ReduxConfig.createStore(reducers, _initialState);
         //fake ready event
-        if(typeof store.ready ==='undefined'){
+        if (typeof store.ready === 'undefined') {
             store.ready = () => (async () => "");
         }
 
         // let store = wrapStore(Redux.createStore(reducers, _initialState));
         store.subscribe(() => {
             let state = Object.assign({}, store.getState());
-            
             if (!srtPlayer.ReduxConfig.shouldStoreState || state.debug.disableStoreReduxState) {
                 return;
             }
