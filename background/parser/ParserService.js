@@ -12,11 +12,14 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.ParserService = srtPlayer.ParserService || (() => {
 
-
         let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let subtitleState = srtPlayer.Redux.getState().subtitle;
             if (subtitleState.raw.length > 0 && subtitleState.parsed.length === 0) {
-                parse(subtitleState.raw, subtitleState.offsetTime);
+                try {
+                    parse(subtitleState.raw, subtitleState.offsetTime);
+                }catch(e){
+                    console.log(e);
+                }
             }
 
             if (!subtitleState.offsetTimeApplied) {

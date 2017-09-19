@@ -5,7 +5,7 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
-    srtPlayer.GuidService = require('../background/guid/GuidService').srtPlayer.GuidService;    
+    srtPlayer.GuidService = require('../background/guid/GuidService').srtPlayer.GuidService;
 }
 
 
@@ -65,16 +65,21 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
             },
 
             setMovieSearchResult: (searchResult, error) => {
+
+                let payload = error ? Object.assign(error, {timestamp: new Date()}) :  {
+                    resultId: srtPlayer.GuidService.createGuid(),
+                    result: searchResult
+                };
+
                 return {
                     type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
-                    payload: {
-                        resultId: srtPlayer.GuidService.createGuid(),
-                        result: searchResult
-                    },
-                    error:error,
+                    payload: payload,
+                    error: typeof error !== 'undefined' && error,
                     meta: "backgroundPage"
                 };
             },
+
+
 
 
             setSelectedMovieSelection: (index) => {
@@ -137,8 +142,8 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT,
                     payload: {
-                        resultId:srtPlayer.GuidService.createGuid(),                        
-                        result:searchResult
+                        resultId: srtPlayer.GuidService.createGuid(),
+                        result: searchResult
                     },
                     meta: "backgroundPage"
                 };
@@ -212,17 +217,17 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 }
             },
 
-            toggleShowDebugConsole:()=>{
+            toggleShowDebugConsole: () => {
                 return {
                     type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE,
                     meta: "appPage"
                 }
             },
 
-            selectSubtitleSelectionMode:(selectedMode)=>{
+            selectSubtitleSelectionMode: (selectedMode) => {
                 return {
                     type: srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE,
-                    payload:selectedMode,
+                    payload: selectedMode,
                     meta: "appPage"
                 }
             }

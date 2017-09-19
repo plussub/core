@@ -25,25 +25,20 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((fetch = window.
                 const response = await fetch('https://app.plus-sub.com/movie/search/' + decodeURIComponent(query));
 
                 if (response.status !== 200) {
-
-
-                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({},{
-                        timestamp:new Date(),
+                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(null,{
                         message:`Moviesearch failed: Page currently not available (${response.status})`,
                         src:"movieSearchService"
-                    }));
+                    },true));
 
                     return;
                 }
                 const result = await getMoreInformationFor(createImbdInformationFrom(await response.json()));
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(result));
             } catch (err) {
-
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({},{
-                    timestamp:new Date(),
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(null,{
                     message:`Moviesearch failed: Are you Disconnected? (${err.message})`,
                     src:"movieSearchService"
-                }));
+                },true));
             }
         }
 

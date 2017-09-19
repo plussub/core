@@ -7,29 +7,36 @@ if (typeof exports !== 'undefined') {
     exports.srtMock = srtMock;
 }
 
-srtMock.SRTParserMock = srtMock.SRTParserMock ||  (()=> {
-
-        function parse(raw) {
-            return [{
-                id: 1,
-                from: 10,
-                to: 15,
-                text: 'firstText'
-            },{
-                id: 2,
-                from: 18,
-                to: 33,
-                text: 'secondText'
-            },{
-                id: 3,
-                from: 45,
-                to: 60,
-                text: 'thirdText'
-            }]
-        }
+srtMock.srtParserHappyPathMock = srtMock.srtParserHappyPathMock || (() => {
 
         return {
-            parse: parse
+            parse: () => {
+                return [{
+                    id: 1,
+                    from: 10,
+                    to: 15,
+                    text: 'firstText'
+                }, {
+                    id: 2,
+                    from: 18,
+                    to: 33,
+                    text: 'secondText'
+                }, {
+                    id: 3,
+                    from: 45,
+                    to: 60,
+                    text: 'thirdText'
+                }]
+            }
+        };
+    });
+
+srtMock.srtParserThrowsExceptionMock = srtMock.srtParserThrowsExceptionMock || (() => {
+
+    return {
+            parse: () => {
+                throw "parse error";
+            }
         };
 
     });

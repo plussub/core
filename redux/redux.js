@@ -127,9 +127,9 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             }
 
             return [...state, {
-                timestamp: action.error.timestamp,
-                message: action.error.message,
-                src: action.error.src
+                timestamp: action.payload.timestamp,
+                message: action.payload.message,
+                src: action.payload.src
             }];
         }
 

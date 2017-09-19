@@ -32,6 +32,9 @@ gulp.task('mocha_specific', function() {
     return gulp.src(['background/movie_search/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
+    return gulp.src(['background/parser/test/*.js'], { read: false })
+        .pipe(mocha({ reporter: 'list'}))
+        .on('error', gutil.log);
 });
 
 

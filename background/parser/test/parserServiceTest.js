@@ -4,7 +4,9 @@ var root = require('../ParserService.js');
 var redux = require('../../../redux/redux.js').srtPlayer.Redux;
 var actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
 
-root.srtPlayer.SRTParser = require('./SrtParserMock.js').srtMock.SRTParserMock;
+var happyPathParserMock =  require('./SrtParserMock.js').srtMock.srtParserHappyPathMock;
+var throwExceptionParserMock =  require('./SrtParserMock.js').srtMock.srtParserThrowsExceptionMock;
+
 var Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
 
 
@@ -13,6 +15,7 @@ describe('ParserService', () => {
     var parserService;
 
     beforeEach(() => {
+        root.srtPlayer.SRTParser = happyPathParserMock;
         parserService = root.srtPlayer.ParserService();
     });
 
@@ -21,7 +24,7 @@ describe('ParserService', () => {
         redux.dispatch(actionCreators.resetAll());
     });
 
-    it('should parse', (done) => {
+    it('should parse unparsed subtitle', (done) => {
 
         let validateResult = (result) => {
             expect(result.parsed.length).to.equal(3);
@@ -44,7 +47,33 @@ describe('ParserService', () => {
 
     });
 
-    it('should set offset', (done) => {
+
+    it('should handle parse errors properly', (done) => {
+
+        root.srtPlayer.SRTParser = throwExceptionParserMock;
+
+        let validateResult = (result) => {
+            expect(result.parsed.length).to.equal(3);
+        };
+
+        let alreadyDone = false;
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.id !== -1) {
+                unsubscribe();
+                validateResult(subtitle);
+                if (!alreadyDone) {
+                    done();
+                }
+                alreadyDone = true;
+            }
+        });
+
+        redux.dispatch(actionCreators.parseRawSubtitle('rawSrtData'));
+
+    });
+
+    it('should apply offset to parsed subtitle', (done) => {
 
         let expectSubtitle = {
             id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
@@ -57,7 +86,7 @@ describe('ParserService', () => {
             offsetTime: 0,
             offsetTimeApplied: true,
             raw: 'rawSrtData'
-        }
+        };
 
         redux.getState().subtitle = expectSubtitle;
 
@@ -90,7 +119,7 @@ describe('ParserService', () => {
     });
 
 
-    it('should recognize previous offset time ', (done) => {
+    it('when offset will be applied, it should recognize previous offset time ', (done) => {
 
         let expectSubtitle = {
             id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
@@ -103,7 +132,7 @@ describe('ParserService', () => {
             offsetTime: 3,
             offsetTimeApplied: true,
             raw: 'rawSrtData'
-        }
+        };
 
         redux.getState().subtitle = expectSubtitle;
 
@@ -135,7 +164,7 @@ describe('ParserService', () => {
 
     });
 
-    it('should not change any offset if new offset is equal old offset ', (done) => {
+    it('should not change any offset if new offset is equals to old offset ', (done) => {
 
         let expectSubtitle = {
             id: 'b3a0e285-f161-d402-2ae1-a302fb1feb59',
@@ -146,7 +175,7 @@ describe('ParserService', () => {
             offsetTime: 3,
             offsetTimeApplied: true,
             raw: 'rawSrtData'
-        }
+        };
 
         redux.getState().subtitle = expectSubtitle;
 
@@ -170,4 +199,5 @@ describe('ParserService', () => {
 
         redux.dispatch(actionCreators.setOffsetTimeForSubtitle(3));
     });
+
 });
