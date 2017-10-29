@@ -11,8 +11,12 @@
     <template>
         <style>
             #tribute {
-                float: right;
+                display: flex;
+                flex-direction: column;
                 font-size: 85%;
+                align-items: flex-end;
+                padding-right: 25px;
+                margin-bottom: 15px;
             }
         </style>
 
@@ -31,18 +35,17 @@
                            on-item-add-fn="[[_selectedSubtitleFn()]]">
         </selectize-wrapper>
 
-        <div id=" tribute
-        ">
-        <label for="themoviedbLink">Movie search powered by</label>
-        <a id="themoviedbLink" href="https://www.themoviedb.org" on-tap="openThemoviedb">www.TheMovieDb.org</a> <br>
-
-        <label for="openSubtitleLink">Subtitle downloads powered by</label>
-        <a id="openSubtitleLink" href="http://www.opensubtitles.org"
-           on-tap="openOpenSubtitle">www.OpenSubtitles.org</a>
-
+        <div id="tribute">
+            <div>
+                <label for="themoviedbLink">Movie search powered by</label>
+                <a id="themoviedbLink" href="https://www.themoviedb.org" on-tap="openThemoviedb">www.TheMovieDb.org</a>
+                <br>
+            </div>
+            <div>
+                <label for="openSubtitleLink">Subtitle downloads powered by</label>
+                <a id="openSubtitleLink" href="http://www.opensubtitles.org" on-tap="openOpenSubtitle">www.OpenSubtitles.org</a>
+            </div>
         </div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
 
     </template>
     <script src="movie-portal-selection.js"></script>
