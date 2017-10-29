@@ -197,8 +197,6 @@ describe('MovieInformationService', () => {
         redux.dispatch(actionCreators.triggerSearchMovie('Batman'));
     });
 
-    //todo
-
     it('imdb query throw disconnect exception', function (done) {
 
         fakeFetch.mock(SEARCH_URL + 'Batman',  () => {
