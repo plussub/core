@@ -52,20 +52,24 @@ describe('ParserService', () => {
 
         root.srtPlayer.SRTParser = throwExceptionParserMock;
 
-        let validateResult = (result) => {
-            expect(result.parsed.length).to.equal(3);
+        let validateResult = (subtitleState, errors) => {
+            expect(errors.length).to.equal(1);
+            expect(errors[0].message).to.equal("Parsing failed: parse error");
+            expect(errors[0].src).to.equal("parserService");
         };
 
-        let alreadyDone = false;
+        let previousErrors=[];
         let unsubscribe = redux.subscribe(() => {
-            let subtitle = redux.getState().subtitle;
-            if (subtitle.id !== -1) {
+            let subtitleState = redux.getState().subtitle;
+            let errors = redux.getState().errors;
+            if(previousErrors.length === errors.length){
+                return;
+            }
+            previousErrors = errors;
+            if (errors.length>0) {
                 unsubscribe();
-                validateResult(subtitle);
-                if (!alreadyDone) {
-                    done();
-                }
-                alreadyDone = true;
+                validateResult(subtitleState,errors);
+                done();
             }
         });
 

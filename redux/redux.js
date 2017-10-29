@@ -125,9 +125,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             if (!action.error) {
                 return state;
             }
-
             return [...state, {
-                timestamp: action.payload.timestamp,
+                timestamp: action.payload.reduxTimestamp,
                 message: action.payload.message,
                 src: action.payload.src
             }];
@@ -168,6 +167,10 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         function subtitleReducers(state, action) {
 
+            if(action.error){
+                return {...state, ...initialState.subtitle};
+            }
+
             switch (action.type) {
                 case srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE:
                     return {
@@ -181,8 +184,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 case srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSED:
                     return {
                         ...state,
-                        id: action.payload.id,
-                        parsed: action.payload.subtitle,
+                        id: action.payload.resultId,
+                        parsed: action.payload.result,
                         pastOffsetTime: 0,
                         offsetTimeApplied: true
                     };

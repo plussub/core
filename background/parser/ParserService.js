@@ -18,7 +18,10 @@ srtPlayer.ParserService = srtPlayer.ParserService || (() => {
                 try {
                     parse(subtitleState.raw, subtitleState.offsetTime);
                 }catch(e){
-                    console.log(e);
+                    return srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parsedSubtitle( {
+                       message:`Parsing failed: ${e}`,
+                       src:"parserService"
+                   },true));
                 }
             }
 

@@ -11,6 +11,11 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
 
+        let timestampFilter = (payload) => Object.assign(payload, {reduxTimestamp: new Date()});
+        let resultFilter = (payload) => Object.assign({}, {result: payload, resultId: srtPlayer.GuidService.createGuid() });
+
+
+
 
         return {
 
@@ -45,13 +50,11 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
-            parsedSubtitle: (subtitle = "") => {
+            parsedSubtitle: (subtitleOrError = "", isError = false) => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSED,
-                    payload: {
-                        subtitle: subtitle,
-                        id: srtPlayer.GuidService.createGuid()
-                    },
+                    payload: isError ? timestampFilter(subtitleOrError) : resultFilter(subtitleOrError),
+                    error: isError,
                     meta: "backgroundPage"
                 };
             },
@@ -64,17 +67,12 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
-            setMovieSearchResult: (searchResult, error) => {
-
-                let payload = error ? Object.assign(error, {timestamp: new Date()}) :  {
-                    resultId: srtPlayer.GuidService.createGuid(),
-                    result: searchResult
-                };
+            setMovieSearchResult: (searchResultOrError, isError = false) => {
 
                 return {
                     type: srtPlayer.Descriptor.MOVIE_SEARCH.MOVIE_SEARCH.PUB.RESULT,
-                    payload: payload,
-                    error: typeof error !== 'undefined' && error,
+                    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
+                    error: isError,
                     meta: "backgroundPage"
                 };
             },
