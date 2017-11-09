@@ -26,7 +26,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
 
             if (previousLink !== subtitleSearch.downloadLink && subtitleSearch.downloadLink !== "") {
                 previousLink = subtitleSearch.downloadLink;
-                if(subtitleSearch.downloadLink!="") {
+                if(subtitleSearch.downloadLink !== "") {
                     download(subtitleSearch.downloadLink);
                 }
             }
@@ -45,10 +45,11 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
             }
 
             try {
-                const response = await fetch(`https://app.plus-sub.com/subtitle/${imdbId}/${language}`)
+                const response = await fetch(`https://app.plus-sub.com/subtitle/${imdbId}/${language}`);
                 if (response.status !== 200) {
-                    console.log('Invalid Status Code: ' + response.status);
-                    return;
+                    throw {
+                        msg: `Invalid Status Code:  ${response.status}`
+                    };
                 }
                 const responseObject = await response.json();
                 const result = responseObject.map(entry =>
@@ -63,7 +64,10 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult(result.map(entry => Object.assign({}, entry, {valueField: JSON.stringify(entry)}))));
 
             } catch (err) {
-                console.error(err);
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
+                     message:`Subtitlesearch failed: Are you Disconnected? (${err.message})`,
+                     src:"subtitleProvider"
+                 },true));
             }
         }
 
@@ -72,14 +76,18 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
             try {
                 const response = await fetch(link);
                 if (response.status !== 200) {
-                    console.log('Invalid Status Code: ' + response.status);
-                    return;
+                    throw {
+                        msg: `Invalid Status Code:  ${response.status}`
+                    };
                 }
                 const raw = await pako.inflate(new Uint8Array(await response.arrayBuffer()), {to: "string"});
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(raw));
 
             } catch (err) {
-                console.error();
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
+                    message:`Subtitle download failed: Are you Disconnected? (${err.message})`,
+                    src:"subtitleProvider"
+                },true));
             }
         }
 

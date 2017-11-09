@@ -1,15 +1,11 @@
-/**
- * Created by sonste on 07.03.2016.
- */
-
-var expect = require('chai').expect;
-var requirejs = require('requirejs');
+//testframework dependency
+const expect = require('chai').expect;
 
 
 describe('Descriptor', ()=> {
 
 
-    var descriptor;
+    let descriptor;
     beforeEach(()=> {
         descriptor = require('../Descriptor').srtPlayer.Descriptor;
     });

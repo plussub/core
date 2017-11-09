@@ -1,18 +1,23 @@
-var expect = require('chai').expect;
-var requirejs = require('requirejs');
-var root = require('../ParserService.js');
-var redux = require('../../../redux/redux.js').srtPlayer.Redux;
-var actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
+//class under test
+const root = require('../ParserService.js');
 
-var happyPathParserMock =  require('./SrtParserMock.js').srtMock.srtParserHappyPathMock;
-var throwExceptionParserMock =  require('./SrtParserMock.js').srtMock.srtParserThrowsExceptionMock;
+//test framework dependencies
+const expect = require('chai').expect;
 
-var Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
+//application dependencies
+let Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
+const redux = require('../../../redux/redux.js').srtPlayer.Redux;
+const actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
+
+//mocks
+const happyPathParserMock = require('./SrtParserMock.js').srtMock.srtParserHappyPathMock;
+const throwExceptionParserMock = require('./SrtParserMock.js').srtMock.srtParserThrowsExceptionMock;
+
 
 
 describe('ParserService', () => {
 
-    var parserService;
+    let parserService;
 
     beforeEach(() => {
         root.srtPlayer.SRTParser = happyPathParserMock;

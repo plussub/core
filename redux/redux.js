@@ -78,7 +78,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 console.log(action.type);
             }
 
-            var state = {...state, errors: globalErrorHandler(state.errors, action)};
+            state = {...state, errors: globalErrorHandler(state.errors, action)};
 
             switch (action.type) {
 
@@ -251,6 +251,12 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         }
 
         function subtitleSearchReducers(state, action) {
+
+            if(action.error){
+                return {...state, ...initialState.subtitleSearch};
+            }
+
+
             switch (action.type) {
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB:
                     if (state.imdbId === action.payload) {

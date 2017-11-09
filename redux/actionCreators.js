@@ -42,14 +42,6 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
-            parseRawSubtitle: (raw) => {
-                return {
-                    type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE,
-                    payload: raw,
-                    meta: "backgroundPage"
-                };
-            },
-
             parsedSubtitle: (subtitleOrError = "", isError = false) => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSED,
@@ -76,9 +68,6 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                     meta: "backgroundPage"
                 };
             },
-
-
-
 
             setSelectedMovieSelection: (index) => {
                 return {
@@ -136,13 +125,11 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
-            setSubtitleSearchResult: (searchResult) => {
+            setSubtitleSearchResult: (searchResultOrError, isError=false) => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT,
-                    payload: {
-                        resultId: srtPlayer.GuidService.createGuid(),
-                        result: searchResult
-                    },
+                    payload: isError ? timestampFilter(searchResultOrError) : resultFilter(searchResultOrError),
+                    error: isError,
                     meta: "backgroundPage"
                 };
             },
