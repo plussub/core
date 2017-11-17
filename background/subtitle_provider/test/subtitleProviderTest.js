@@ -10,6 +10,9 @@ const redux = require('../../../redux/redux.js').srtPlayer.Redux;
 const actionCreators = require('../../../redux/actionCreators.js').srtPlayer.ActionCreators;
 let Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descriptor;
 
+//mocks
+const srtInflaterResponseToAsciiMock = require('./InflaterMock.js').srtMock.srtInflaterResponseToAsciiMock;
+
 //expected results
 const DEFAULT_SUBTITLE_SEARCH_RESULT = require('./expectedResponse.js').DEFAULT_SUBTITLE_SEARCH_RESULT;
 
@@ -24,6 +27,7 @@ describe('SubtitleProvider', () => {
 
     beforeEach(() => {
         fakeFetch = fetchMock.sandbox();
+        root.srtPlayer.Inflater = srtInflaterResponseToAsciiMock;
         subtitleProvider = root.srtPlayer.SubtitleProvider(fakeFetch);
     });
 
@@ -100,6 +104,44 @@ describe('SubtitleProvider', () => {
     });
 
 
+    it('should handle invalid http status codes properly when subtitle are searched', (done) => {
+
+
+        const imdbid = "0110912";
+        const iso639 = "eng"; //default
+
+        fakeFetch.mock(`${BASE_URL}/${imdbid}/${iso639}`, {
+            status: 404
+        });
+
+        let validateResult = (subtitleSearch, errors) => {
+            expect(subtitleSearch.imdbId).to.equal("");
+            expect(errors.length).to.equal(1);
+            expect(errors[0].message).to.equal(`Subtitlesearch failed: Page currently not available (404)`);
+            expect(errors[0].src).to.equal("subtitleProvider");
+
+        };
+
+
+        let previousErrors = [];
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            let errors = redux.getState().errors;
+            if (previousErrors.length === errors.length) {
+                return;
+            }
+            previousErrors = errors;
+
+            if (errors.length > 0) {
+                unsubscribe();
+                validateResult(subtitleSearch, errors);
+                done();
+            }
+        });
+
+        redux.dispatch(actionCreators.triggerSubtitleSearchViaImdbId(imdbid));
+    });
+
     it('empty result should also notify', (done) => {
 
         const imdbid = "0110912";
@@ -147,6 +189,91 @@ describe('SubtitleProvider', () => {
 
         redux.dispatch(actionCreators.triggerSubtitleSearchViaImdbId(imdbid));
         redux.dispatch(actionCreators.triggerSubtitleSearchViaLanguage(iso639));
+
+    });
+
+    it('should http downloadlink transform to https and download link content', (done) => {
+
+        const downloadLinkResult = "zipped result";
+
+        fakeFetch.mock(`https://somedownloadlink`, downloadLinkResult);
+
+        let unsubscribe = redux.subscribe(() => {
+            let subtitle = redux.getState().subtitle;
+            if (subtitle.raw === downloadLinkResult) {
+                unsubscribe();
+                done();
+            }
+        });
+
+        redux.dispatch(actionCreators.triggerSubtitleDownload("http://somedownloadlink"));
+    });
+
+    it('should handle invalid http status codes properly when download link content', (done) => {
+
+        fakeFetch.mock(`https://somedownloadlink`, {
+            status: 404
+        });
+
+        let validateResult = (subtitleSearch, errors) => {
+            expect(subtitleSearch.downloadLink).to.equal("");
+            expect(errors.length).to.equal(1);
+            expect(errors[0].message).to.equal(`Subtitledownload failed: Download is currently not available (404)`);
+            expect(errors[0].src).to.equal("subtitleProvider");
+        };
+
+        let previousErrors = [];
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            let errors = redux.getState().errors;
+            if (previousErrors.length === errors.length) {
+                return;
+            }
+            previousErrors = errors;
+
+            if (errors.length > 0) {
+                unsubscribe();
+                validateResult(subtitleSearch, errors);
+                done();
+            }
+        });
+
+        redux.dispatch(actionCreators.triggerSubtitleDownload("http://somedownloadlink"));
+    });
+
+
+    it('should handle connection errors properly when download link content', (done) => {
+        fakeFetch.mock(`https://somedownloadlink`, () => {
+            throw {
+                type: "TypeError",
+                message: "Failed to fetch"
+            }
+        });
+
+        let validateResult = (subtitleSearch, errors) => {
+            expect(subtitleSearch.downloadLink).to.equal("");
+            expect(errors.length).to.equal(1);
+            expect(errors[0].message).to.equal(`Are you Disconnected? (Failed to fetch)`);
+            expect(errors[0].src).to.equal("subtitleProvider");
+        };
+
+        let previousErrors = [];
+        let unsubscribe = redux.subscribe(() => {
+            let subtitleSearch = redux.getState().subtitleSearch;
+            let errors = redux.getState().errors;
+            if (previousErrors.length === errors.length) {
+                return;
+            }
+            previousErrors = errors;
+
+            if (errors.length > 0) {
+                unsubscribe();
+                validateResult(subtitleSearch, errors);
+                done();
+            }
+        });
+
+        redux.dispatch(actionCreators.triggerSubtitleDownload("http://somedownloadlink"));
 
     });
 });

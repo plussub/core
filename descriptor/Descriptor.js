@@ -82,6 +82,13 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                         SET_SELECTED:".setSelected",
                         RESET:".reset",
                     }
+                },
+
+                DOWNLOAD: {
+                    NAME: "subtitleDownload",
+                    _PUB: {
+                        RESULT: ".result"
+                    }
                 }
             },
 

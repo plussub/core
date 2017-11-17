@@ -47,9 +47,11 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
             try {
                 const response = await fetch(`https://app.plus-sub.com/subtitle/${imdbId}/${language}`);
                 if (response.status !== 200) {
-                    throw {
-                        msg: `Invalid Status Code:  ${response.status}`
-                    };
+                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
+                        message:`Subtitlesearch failed: Page currently not available (${response.status})`,
+                        src:"subtitleProvider"
+                    },true));
+                    return;
                 }
                 const responseObject = await response.json();
                 const result = responseObject.map(entry =>
@@ -76,16 +78,18 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
             try {
                 const response = await fetch(link);
                 if (response.status !== 200) {
-                    throw {
-                        msg: `Invalid Status Code:  ${response.status}`
-                    };
+                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
+                        message:`Subtitledownload failed: Download is currently not available (404)`,
+                        src:"subtitleProvider"
+                    },true));
+                    return;
                 }
-                const raw = await pako.inflate(new Uint8Array(await response.arrayBuffer()), {to: "string"});
+                const raw  = await srtPlayer.Inflater().inflate(response);
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(raw));
 
             } catch (err) {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
-                    message:`Subtitle download failed: Are you Disconnected? (${err.message})`,
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
+                    message:"Are you Disconnected? (Failed to fetch)",
                     src:"subtitleProvider"
                 },true));
             }

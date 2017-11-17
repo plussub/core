@@ -42,7 +42,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 poster: null,
                 src: ""
             },
-
+            //splitten zu search/info/download
             subtitleSearch: {
                 imdbId: "",
                 language: "eng",
@@ -51,7 +51,6 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 result: [],
                 downloadLink: "",
                 selected: -1,
-
             },
 
             //videoMeta is transient
@@ -112,6 +111,8 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET:
+                //todo: download.result handles currently only erro
+                case srtPlayer.Descriptor.SUBTITLE_SEARCH.DOWNLOAD.PUB.RESULT:
                     return {...state, subtitleSearch: subtitleSearchReducers(state.subtitleSearch, action)};
                 case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE:
                     return {...state, debug: debugReducers(state.debug, action)};
