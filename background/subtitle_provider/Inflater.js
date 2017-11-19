@@ -8,8 +8,7 @@ srtPlayer.Inflater = srtPlayer.Inflater|| (() => {
 
     return{
         inflate: async (response)=>{
-            debugger;
-            pako.inflate(new Uint8Array(await response.arrayBuffer()), {to: "string"});
+            return pako.inflate(new Uint8Array(await response.arrayBuffer()), {to: "string"});
         }
     };
 });
