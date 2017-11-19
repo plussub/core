@@ -31,6 +31,7 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
 
         this.selectize = $(this.$.selectize)[0].selectize;
         this.selectize.updatePlaceholder();
+        this.$.check.hidden=true;
 
 
     }
@@ -126,15 +127,19 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
     clearOptions() {
         if (this.selectize && this.selectize.clearOptions) {
             this.selectize.clearOptions();
+            this.$.check.hidden=true;
         }
     }
 
     clear(silent=false) {
-        this.selectize.clear(silent)
+        this.selectize.clear(silent);
+        this.$.check.hidden=true;
     }
 
     clearCurrentSelection() {
         this.selectize.clear();
+        this.$.check.hidden=true;
+
     }
 
     refreshOptions(triggerDropdown) {
@@ -155,6 +160,8 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
 
     load(values) {
         this.selectize.load((fn) => fn(values));
+        // console.log("load");
+        this.$.check.hidden=false;
     }
 
     getOptions() {
