@@ -7,28 +7,20 @@ if (typeof exports !== 'undefined') {
     srtPlayer.ActionCreators = require('../../redux/actionCreators').srtPlayer.ActionCreators;        
 }
 
-srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetch) => {
+srtPlayer.SubtitleSearchService = srtPlayer.SubtitleSearchService || ((fetch = window.fetch) => {
 
         let previousImdbId = srtPlayer.Redux.getState().subtitleSearch.imdbId;
         let previousLanguage = srtPlayer.Redux.getState().subtitleSearch.language;
-        let previousLink = srtPlayer.Redux.getState().subtitleSearch.downloadLink;
-        
+
         let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let subtitleSearch = srtPlayer.Redux.getState().subtitleSearch;
-            let subtitleDownload = srtPlayer.Redux.getState().subtitleDownload;
-
             if (previousImdbId !== subtitleSearch.imdbId || previousLanguage !== subtitleSearch.language) {
                 previousImdbId = subtitleSearch.imdbId;
                 previousLanguage = subtitleSearch.language;
-               
+
                 if(subtitleSearch.imdbId !== "" && subtitleSearch.language!==""){
                     search(subtitleSearch.imdbId, subtitleSearch.language);
                 }
-            }
-
-            if (previousLink !== subtitleDownload.downloadLink && subtitleDownload.downloadLink !== "") {
-                previousLink = subtitleDownload.downloadLink;
-                download(subtitleDownload.downloadLink);
             }
         });
 
@@ -49,7 +41,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                 if (response.status !== 200) {
                     srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
                         message:`Failed to search subtitle. Status ${response.status}`,
-                        src:"subtitleProvider"
+                        src:"subtitleSearchService"
                     },true));
                     return;
                 }
@@ -68,30 +60,8 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
             } catch (err) {
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
                      message:`Failed to search subtitle. Are you Disconnected? Err: (${err})`,
-                     src:"subtitleProvider"
+                     src:"subtitleSearchService"
                  },true));
-            }
-        }
-
-        async function download(downloadLink) {
-            let link = downloadLink.replace('http://', 'https://');
-            try {
-                const response = await fetch(link);
-                if (response.status !== 200) {
-                    srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                        message:`Failed to download subtitle. Status ${response.status}`,
-                        src:"subtitleProvider"
-                    },true));
-                    return;
-                }
-                const raw  = await srtPlayer.Inflater().inflate(response);
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult(raw));
-
-            } catch (err) {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                    message:`Failed to download subtitle. Are you Disconnected? Err: (${err})`,
-                    src:"subtitleProvider"
-                },true));
             }
         }
 
@@ -102,6 +72,6 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
     });
 
 //instant service does not correct initialize messageBus (in testfiles)
-if (typeof exports === 'undefined' && typeof srtPlayer.SubtitleProvider === 'function') {
-    srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider();
+if (typeof exports === 'undefined' && typeof srtPlayer.SubtitleSearchService === 'function') {
+    srtPlayer.SubtitleSearchService = srtPlayer.SubtitleSearchService();
 }
