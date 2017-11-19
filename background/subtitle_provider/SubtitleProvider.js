@@ -48,7 +48,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                 const response = await fetch(`https://app.plus-sub.com/subtitle/${imdbId}/${language}`);
                 if (response.status !== 200) {
                     srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
-                        message:`Subtitlesearch failed: Page currently not available (${response.status})`,
+                        message:`Failed to search subtitle. Status ${response.status}`,
                         src:"subtitleProvider"
                     },true));
                     return;
@@ -67,7 +67,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
 
             } catch (err) {
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
-                     message:`Subtitlesearch failed: Are you Disconnected? (${err.message})`,
+                     message:`Failed to search subtitle. Are you Disconnected? Err: (${err})`,
                      src:"subtitleProvider"
                  },true));
             }
@@ -79,7 +79,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                 const response = await fetch(link);
                 if (response.status !== 200) {
                     srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                        message:`Subtitledownload failed: Download is currently not available (404)`,
+                        message:`Failed to download subtitle. Status ${response.status}`,
                         src:"subtitleProvider"
                     },true));
                     return;
@@ -89,7 +89,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
 
             } catch (err) {
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({
-                    message:"Are you Disconnected? (Failed to fetch)",
+                    message:`Failed to download subtitle. Are you Disconnected? Err: (${err})`,
                     src:"subtitleProvider"
                 },true));
             }

@@ -53,6 +53,13 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 selected: -1,
             },
 
+            subtitleDownload:{
+                downloadLink: "",
+                isLoading: false,
+                resultId: -1,
+                result: []
+            },
+
             //videoMeta is transient
             videoMeta: {
                 tickInMs: 0,

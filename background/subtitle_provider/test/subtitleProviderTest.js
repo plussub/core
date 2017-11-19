@@ -79,7 +79,7 @@ describe('SubtitleProvider', () => {
         let validateResult = (subtitleSearch, errors) => {
             expect(subtitleSearch.imdbId).to.equal("");
             expect(errors.length).to.equal(1);
-            expect(errors[0].message).to.equal("Subtitlesearch failed: Are you Disconnected? (Failed to fetch)");
+            expect(errors[0].message).to.equal("Failed to search subtitle. Are you Disconnected? Err: ([object Object])");
             expect(errors[0].src).to.equal("subtitleProvider");
         };
 
@@ -117,7 +117,7 @@ describe('SubtitleProvider', () => {
         let validateResult = (subtitleSearch, errors) => {
             expect(subtitleSearch.imdbId).to.equal("");
             expect(errors.length).to.equal(1);
-            expect(errors[0].message).to.equal(`Subtitlesearch failed: Page currently not available (404)`);
+            expect(errors[0].message).to.equal(`Failed to search subtitle. Status 404`);
             expect(errors[0].src).to.equal("subtitleProvider");
 
         };
@@ -218,7 +218,7 @@ describe('SubtitleProvider', () => {
         let validateResult = (subtitleSearch, errors) => {
             expect(subtitleSearch.downloadLink).to.equal("");
             expect(errors.length).to.equal(1);
-            expect(errors[0].message).to.equal(`Subtitledownload failed: Download is currently not available (404)`);
+            expect(errors[0].message).to.equal(`Failed to download subtitle. Status 404`);
             expect(errors[0].src).to.equal("subtitleProvider");
         };
 
@@ -253,7 +253,7 @@ describe('SubtitleProvider', () => {
         let validateResult = (subtitleSearch, errors) => {
             expect(subtitleSearch.downloadLink).to.equal("");
             expect(errors.length).to.equal(1);
-            expect(errors[0].message).to.equal(`Are you Disconnected? (Failed to fetch)`);
+            expect(errors[0].message).to.equal("Failed to download subtitle. Are you Disconnected? Err: ([object Object])");
             expect(errors[0].src).to.equal("subtitleProvider");
         };
 

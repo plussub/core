@@ -216,7 +216,7 @@ describe('MovieSearchService', () => {
         let validateResult = (movieSearch, errors) => {
             expect(movieSearch.query).to.equal('');
             expect(errors.length).to.equal(1);
-            expect(errors[0].message).to.equal("Moviesearch failed: Are you Disconnected? (Failed to fetch)");
+            expect(errors[0].message).to.equal("Failed to search movie. Are you Disconnected? Err: ([object Object])");
             expect(errors[0].src).to.equal("movieSearchService");
 
         };
@@ -251,7 +251,7 @@ describe('MovieSearchService', () => {
             expect(movieSearch.query).to.equal('');
             expect(errors.length).to.equal(1);
 
-            expect(errors[0].message).to.equal(`Moviesearch failed: Page currently not available (404)`);
+            expect(errors[0].message).to.equal(`Failed to search movie. Status (404)`);
             expect(errors[0].src).to.equal("movieSearchService");
         };
 

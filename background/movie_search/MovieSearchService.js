@@ -26,7 +26,7 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((fetch = window.
 
                 if (response.status !== 200) {
                     srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
-                        message:`Moviesearch failed: Page currently not available (${response.status})`,
+                        message:`Failed to search movie. Status (${response.status})`,
                         src:"movieSearchService"
                     },true));
 
@@ -36,7 +36,7 @@ srtPlayer.MovieSearchService = srtPlayer.MovieSearchService || ((fetch = window.
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult(result));
             } catch (err) {
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieSearchResult({
-                    message:`Moviesearch failed: Are you Disconnected? (${err.message})`,
+                    message:`Failed to search movie. Are you Disconnected? Err: (${err})`,
                     src:"movieSearchService"
                 },true));
             }

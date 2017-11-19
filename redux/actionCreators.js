@@ -5,7 +5,7 @@ var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
     srtPlayer.Descriptor = require('../descriptor/Descriptor').srtPlayer.Descriptor;
-    srtPlayer.GuidService = require('../background/guid/GuidService').srtPlayer.GuidService;
+    srtPlayer.GuidService = require('./GuidService').srtPlayer.GuidService;
 }
 
 
@@ -92,7 +92,9 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
             setMovieInfo: (movieInfo) => {
                 return {
                     type: srtPlayer.Descriptor.MOVIE_INFO.MOVIE_INFO.PUB.SET,
-                    payload: movieInfo
+                    payload: Object.assign(movieInfo,{
+                        id:srtPlayer.GuidService.createGuid()
+                    })
                 };
             },
 
