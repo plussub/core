@@ -19,17 +19,6 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
 
         return {
 
-            setSubtitleDownloadResult: (rawSubtitleOrError,isError=false) => {
-                if(!isError){
-                    return srtPlayer.ActionCreators.parseRawSubtitle(rawSubtitleOrError);
-                }else{
-                    return {
-                        type: srtPlayer.Descriptor.SUBTITLE_SEARCH.DOWNLOAD.PUB.RESULT,
-                        payload: timestampFilter(rawSubtitleOrError),
-                        error: isError
-                    };
-                }
-            },
 
             parseRawSubtitle: (raw) => {
                 return {
@@ -135,16 +124,30 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 };
             },
 
+            triggerSubtitleSearchReset: () => {
+                return {
+                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET
+                };
+            },
+
             triggerSubtitleDownload: (link) => {
                 return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD,
+                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK,
                     payload: link
                 };
             },
 
-            triggerSubtitleSearchReset: () => {
+            setSubtitleDownloadResult: (rawSubtitleOrError,isError=false) => {
                 return {
-                    type: srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET
+                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESULT,
+                    payload: isError ? timestampFilter(rawSubtitleOrError) : resultFilter(rawSubtitleOrError),
+                    error: isError
+                };
+            },
+
+            resetSubtitleDownload: () => {
+                return {
+                    type: srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESET
                 };
             },
 

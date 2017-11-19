@@ -51,6 +51,7 @@ class PlussubAppElement extends Polymer.Element {
         srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.resetMovieInfo());
         srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleSearchReset());
         srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerMovieSearchReset());
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.resetSubtitleDownload());
     }
 }
 

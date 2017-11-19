@@ -15,6 +15,8 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
         
         let unsubscribe = srtPlayer.Redux.subscribe(() => {
             let subtitleSearch = srtPlayer.Redux.getState().subtitleSearch;
+            let subtitleDownload = srtPlayer.Redux.getState().subtitleDownload;
+
             if (previousImdbId !== subtitleSearch.imdbId || previousLanguage !== subtitleSearch.language) {
                 previousImdbId = subtitleSearch.imdbId;
                 previousLanguage = subtitleSearch.language;
@@ -24,11 +26,9 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                 }
             }
 
-            if (previousLink !== subtitleSearch.downloadLink && subtitleSearch.downloadLink !== "") {
-                previousLink = subtitleSearch.downloadLink;
-                if(subtitleSearch.downloadLink !== "") {
-                    download(subtitleSearch.downloadLink);
-                }
+            if (previousLink !== subtitleDownload.downloadLink && subtitleDownload.downloadLink !== "") {
+                previousLink = subtitleDownload.downloadLink;
+                download(subtitleDownload.downloadLink);
             }
         });
 
@@ -85,7 +85,7 @@ srtPlayer.SubtitleProvider = srtPlayer.SubtitleProvider || ((fetch = window.fetc
                     return;
                 }
                 const raw  = await srtPlayer.Inflater().inflate(response);
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.parseRawSubtitle(raw));
+                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult(raw));
 
             } catch (err) {
                 srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleDownloadResult({

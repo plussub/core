@@ -73,12 +73,11 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
 
             SUBTITLE_SEARCH:{
                 SUBTITLE_SEARCH:{
-                    NAME:"subtileSearch",
+                    NAME:"subtitleSearch",
                     _PUB:{
                         SEARCH_VIA_IMDB:".searchImdb",
                         SEARCH_VIA_LANGUAGE:".searchLang",
                         RESULT:".result",
-                        DOWNLOAD:".download",
                         SET_SELECTED:".setSelected",
                         RESET:".reset",
                     }
@@ -91,6 +90,19 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                     }
                 }
             },
+
+            SUBTITLE_DOWNLOAD:{
+                SUBTITLE_DOWNLOAD:{
+                    NAME: "subtitleDownload",
+                    _PUB:{
+                        DOWNLOAD_LINK:".downloadLink",
+                        RESULT: ".result",
+                        RESET:".reset"
+                    }
+                }
+
+            },
+
 
             MOVIE_INFO: {
                 MOVIE_INFO: {

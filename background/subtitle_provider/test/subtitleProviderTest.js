@@ -199,8 +199,8 @@ describe('SubtitleProvider', () => {
         fakeFetch.mock(`https://somedownloadlink`, downloadLinkResult);
 
         let unsubscribe = redux.subscribe(() => {
-            let subtitle = redux.getState().subtitle;
-            if (subtitle.raw === downloadLinkResult) {
+            let subtitleDownload = redux.getState().subtitleDownload;
+            if (subtitleDownload.result === downloadLinkResult) {
                 unsubscribe();
                 done();
             }
@@ -215,8 +215,8 @@ describe('SubtitleProvider', () => {
             status: 404
         });
 
-        let validateResult = (subtitleSearch, errors) => {
-            expect(subtitleSearch.downloadLink).to.equal("");
+        let validateResult = (subtitleDownload, errors) => {
+            expect(subtitleDownload.downloadLink).to.equal("");
             expect(errors.length).to.equal(1);
             expect(errors[0].message).to.equal(`Failed to download subtitle. Status 404`);
             expect(errors[0].src).to.equal("subtitleProvider");
@@ -224,7 +224,7 @@ describe('SubtitleProvider', () => {
 
         let previousErrors = [];
         let unsubscribe = redux.subscribe(() => {
-            let subtitleSearch = redux.getState().subtitleSearch;
+            let subtitleSearch = redux.getState().subtitleDownload;
             let errors = redux.getState().errors;
             if (previousErrors.length === errors.length) {
                 return;
@@ -250,8 +250,8 @@ describe('SubtitleProvider', () => {
             }
         });
 
-        let validateResult = (subtitleSearch, errors) => {
-            expect(subtitleSearch.downloadLink).to.equal("");
+        let validateResult = (subtitleDownload, errors) => {
+            expect(subtitleDownload.downloadLink).to.equal("");
             expect(errors.length).to.equal(1);
             expect(errors[0].message).to.equal("Failed to download subtitle. Are you Disconnected? Err: ([object Object])");
             expect(errors[0].src).to.equal("subtitleProvider");
@@ -259,7 +259,7 @@ describe('SubtitleProvider', () => {
 
         let previousErrors = [];
         let unsubscribe = redux.subscribe(() => {
-            let subtitleSearch = redux.getState().subtitleSearch;
+            let subtitleSearch = redux.getState().subtitleDownload;
             let errors = redux.getState().errors;
             if (previousErrors.length === errors.length) {
                 return;

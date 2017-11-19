@@ -42,22 +42,21 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 poster: null,
                 src: ""
             },
-            //splitten zu search/info/download
+
             subtitleSearch: {
                 imdbId: "",
                 language: "eng",
                 isLoading: false,
                 resultId: -1,
                 result: [],
-                downloadLink: "",
                 selected: -1,
             },
 
-            subtitleDownload:{
+            subtitleDownload: {
                 downloadLink: "",
                 isLoading: false,
                 resultId: -1,
-                result: []
+                result: ""
             },
 
             //videoMeta is transient
@@ -115,12 +114,13 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_IMDB:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SEARCH_VIA_LANGUAGE:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT:
-                case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED:
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET:
-                //todo: download.result handles currently only erro
-                case srtPlayer.Descriptor.SUBTITLE_SEARCH.DOWNLOAD.PUB.RESULT:
                     return {...state, subtitleSearch: subtitleSearchReducers(state.subtitleSearch, action)};
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK:
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESULT:
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESET:
+                    return {...state, subtitleDownload: subtitleDownloadReducers(state.subtitleDownload, action)};
                 case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE:
                     return {...state, debug: debugReducers(state.debug, action)};
                 default:
@@ -175,7 +175,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         function subtitleReducers(state, action) {
 
-            if(action.error){
+            if (action.error) {
                 return {...state, ...initialState.subtitle};
             }
 
@@ -231,7 +231,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         function movieSearchReducers(state, action) {
 
-            if(action.error){
+            if (action.error) {
                 return {...state, ...initialState.movieSearch};
             }
 
@@ -260,7 +260,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         function subtitleSearchReducers(state, action) {
 
-            if(action.error){
+            if (action.error) {
                 return {...state, ...initialState.subtitleSearch};
             }
 
@@ -301,12 +301,32 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                         resultId: action.payload.resultId,
                         result: action.payload.result,
                     };
-                case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.DOWNLOAD:
-                    return {...state, downloadLink: action.payload};
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.SET_SELECTED:
                     return {...state, selected: action.payload};
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESET:
                     return {...state, ...initialState.subtitleSearch};
+                default:
+                    return state;
+            }
+        }
+
+        function subtitleDownloadReducers(state, action) {
+
+            if (action.error) {
+                return {...state, ...initialState.subtitleDownload};
+            }
+            switch (action.type) {
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK:
+                    return {...state, downloadLink: action.payload, isLoading: true};
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESULT:
+                    return {
+                        ...state,
+                        isLoading: false,
+                        resultId: action.payload.resultId,
+                        result: action.payload.result,
+                    };
+                case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESET:
+                    return {...state, ...initialState.subtitleDownload};
                 default:
                     return state;
             }
