@@ -356,7 +356,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         let store = srtPlayer.ReduxConfig.createStore(reducers, _initialState);
         //fake ready event
         if (typeof store.ready === 'undefined') {
-            store.ready = () => (async () => "");
+            store.ready = () => ((async () => ""))();
         }
 
         // let store = wrapStore(Redux.createStore(reducers, _initialState));

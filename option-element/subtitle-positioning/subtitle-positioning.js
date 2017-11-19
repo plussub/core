@@ -35,10 +35,17 @@ class SubtitlePositioningElement extends Polymer.Element {
                     });
                 },
                 notify: true,
+                observer: '_cueChanged'
             }
         }
     }
 
+    _cueChanged(){
+        console.log(this.cue);
+        this._linePosition = this.cue.line;
+        this._horizontalPosition = this.cue.position;
+        this._size = this.cue.size;
+    }
 
     _linePositionChanged(val) {
         this.set('cue.line', val);
