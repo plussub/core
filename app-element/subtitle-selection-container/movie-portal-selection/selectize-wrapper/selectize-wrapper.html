@@ -29,6 +29,10 @@
                 display:none;
             }
 
+            iron-icon[invisible]{
+                visibility:hidden;
+            }
+
         </style>
         <label for="container">[[placeholder]]</label>
         <div id="container">
@@ -36,7 +40,7 @@
                 <select id="selectize"></select>
             </div>
             <paper-spinner id="spinner"></paper-spinner>
-            <iron-icon id="check" icon="icons:swap-horiz" hidden$="true"></iron-icon>
+            <iron-icon id="check" icon="icons:swap-horiz" style="fill:green" invisible$="{{iconIsInvisible}}"></iron-icon>
             <paper-fab mini="" icon="clear" title="clear" on-tap="clearCurrentSelection"></paper-fab>
         </div>
     </template>

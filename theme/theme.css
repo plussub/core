@@ -120,6 +120,12 @@ paper-button{
     --paper-slider-active-color: #37474F;
     --paper-slider-pin-color: #37474F;
 
+    --paper-spinner-layer-1-color: #FF5722;
+    --paper-spinner-layer-2-color: #FF5722;
+    --paper-spinner-layer-3-color: #FF5722;
+    --paper-spinner-layer-4-color: #FF5722;
+    --paper-spinner-stroke-width: 3px;
+
 
     --paper-tabs-selection-bar-color: transparent;
     --paper-tab-ink: #90a4ae;

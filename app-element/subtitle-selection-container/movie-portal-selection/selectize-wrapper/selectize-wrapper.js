@@ -31,13 +31,18 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
 
         this.selectize = $(this.$.selectize)[0].selectize;
         this.selectize.updatePlaceholder();
-        this.$.check.hidden=true;
+        this.iconIsInvisible=true;
 
 
     }
 
     static get properties() {
         return {
+            iconIsInvisible:{
+                type: Boolean,
+                value: true
+            },
+
             //selectize 1:1 mapping
             placeholder: {
                 type: String,
@@ -127,18 +132,18 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
     clearOptions() {
         if (this.selectize && this.selectize.clearOptions) {
             this.selectize.clearOptions();
-            this.$.check.hidden=true;
+            this.iconIsInvisible=true;
         }
     }
 
     clear(silent=false) {
         this.selectize.clear(silent);
-        this.$.check.hidden=true;
+        this.iconIsInvisible=true;
     }
 
     clearCurrentSelection() {
         this.selectize.clear();
-        this.$.check.hidden=true;
+        this.iconIsInvisible=true;
 
     }
 
@@ -161,7 +166,7 @@ class PlussubSelectizeWrapperElement extends Polymer.Element {
     load(values) {
         this.selectize.load((fn) => fn(values));
         // console.log("load");
-        this.$.check.hidden=false;
+        this.iconIsInvisible=values.length === 0;
     }
 
     getOptions() {
