@@ -120,10 +120,10 @@ paper-button{
     --paper-slider-active-color: #37474F;
     --paper-slider-pin-color: #37474F;
 
-    --paper-spinner-layer-1-color: #FF5722;
-    --paper-spinner-layer-2-color: #FF5722;
-    --paper-spinner-layer-3-color: #FF5722;
-    --paper-spinner-layer-4-color: #FF5722;
+    --paper-spinner-layer-1-color: #5bc0de;
+    --paper-spinner-layer-2-color: #5bc0de;
+    --paper-spinner-layer-3-color: #5bc0de;
+    --paper-spinner-layer-4-color: #5bc0de;
     --paper-spinner-stroke-width: 3px;
 
 
@@ -140,7 +140,7 @@ paper-button{
     --paper-toolbar-color: #ffffff;
 
     --paper-progress-container-color: #ffffff;
-    --paper-progress-active-color: #FF5722;
+    --paper-progress-active-color: #5bc0de;
     /*--paper-icon-button*/
 
 }

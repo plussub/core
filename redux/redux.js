@@ -317,6 +317,9 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
             switch (action.type) {
                 case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK:
+                    if(state.downloadLink === action.payload){
+                        return state;
+                    }
                     return {...state, downloadLink: action.payload, isLoading: true};
                 case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESULT:
                     return {
