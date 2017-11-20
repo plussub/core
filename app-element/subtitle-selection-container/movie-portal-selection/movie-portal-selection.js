@@ -109,17 +109,10 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
 
             srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSelectedSubtitleSelection(index));
             srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.triggerSubtitleDownload(link));
-            if (index === -1) {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
-                    title: "-",
-                    src: "MoviePortal Selection"
-                }));
-            } else {
-                srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
-                    title: selectedMovie.Title,
-                    src: "MoviePortal Selection"
-                }));
-            }
+            srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setMovieInfo({
+                title: index !== -1 ? selectedMovie.Title : "-",
+                src: "MoviePortal Selection"
+            }));
         }
     }
 

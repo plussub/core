@@ -291,7 +291,6 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
                         isLoading: true,
                         result: [],
                         resultId: -1,
-                        downloadLink: "",
                         selected: -1
                     };
                 case srtPlayer.Descriptor.SUBTITLE_SEARCH.SUBTITLE_SEARCH.PUB.RESULT:
@@ -315,6 +314,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             if (action.error) {
                 return {...state, ...initialState.subtitleDownload};
             }
+
             switch (action.type) {
                 case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.DOWNLOAD_LINK:
                     return {...state, downloadLink: action.payload, isLoading: true};

@@ -139,6 +139,8 @@ paper-button{
     --paper-toolbar-background: #5bc0de;
     --paper-toolbar-color: #ffffff;
 
-        /*--paper-icon-button*/
+    --paper-progress-container-color: #ffffff;
+    --paper-progress-active-color: #FF5722;
+    /*--paper-icon-button*/
 
 }
