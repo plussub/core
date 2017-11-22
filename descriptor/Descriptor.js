@@ -156,7 +156,8 @@ srtPlayer.Descriptor = srtPlayer.Descriptor || (() => {
                 DEBUG:{
                     NAME:"debug",
                     _PUB:{
-                        TOGGLE_CONSOLE:".toggleConsole"
+                        TOGGLE_CONSOLE:".toggleConsole",
+                        ENABLE_CONSOLE:".enableConsole"
                     }
                 }
             },

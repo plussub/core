@@ -203,6 +203,13 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
                 }
             },
 
+            enableDebugConsole: (enabled) => {
+                return {
+                    type: srtPlayer.Descriptor.DEBUG.DEBUG.PUB.ENABLE_CONSOLE,
+                    payload: enabled
+                }
+            },
+
             selectSubtitleSelectionMode: (selectedMode) => {
                 return {
                     type: srtPlayer.Descriptor.APP_STATE.APP_STATE.PUB.SELECT_MODE,

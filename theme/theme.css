@@ -140,7 +140,8 @@ paper-button{
     --paper-toolbar-color: #ffffff;
 
     --paper-progress-container-color: #ffffff;
-    --paper-progress-active-color: #5bc0de;
+    --paper-progress-active-color: #s5bc0de;
+    --paper-checkbox-checked-color: #ff6e40;
     /*--paper-icon-button*/
 
 }

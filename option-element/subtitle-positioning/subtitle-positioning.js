@@ -41,7 +41,6 @@ class SubtitlePositioningElement extends Polymer.Element {
     }
 
     _cueChanged(){
-        console.log(this.cue);
         this._linePosition = this.cue.line;
         this._horizontalPosition = this.cue.position;
         this._size = this.cue.size;

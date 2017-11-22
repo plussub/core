@@ -34,6 +34,7 @@
     "paper-slider": "PolymerElements/paper-slider#^2.0.0",
     "redux": "https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js",
     "paper-card": "PolymerElements/paper-card#^2.0.0",
-    "paper-progress": "PolymerElements/paper-progress#^2.0.1"
+    "paper-progress": "PolymerElements/paper-progress#^2.0.1",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.1"
   }
 }

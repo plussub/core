@@ -4,61 +4,26 @@ class PlussubOptionElement extends Polymer.Element {
     }
 
     ready() {
-
         super.ready();
-        let previousLoadedCss = "";
-        let previousLoadedSubtitleProperties = {};
-
-        srtPlayer.Redux.subscribe(()=>{
-            let css = srtPlayer.Redux.getState().option.css;
-            if(previousLoadedCss !== css){
-                previousLoadedCss = css;
-                this._setCss(css);
-            }
-
-            let subtitleProperties = srtPlayer.Redux.getState().option.subtitleProperties;
-            if(JSON.stringify(previousLoadedSubtitleProperties)!==JSON.stringify(subtitleProperties)){
-                previousLoadedSubtitleProperties = subtitleProperties;
-                this._setSubtitleProperties(subtitleProperties);
-            }
-        });
     }
 
     static get properties() {
         return {
+
             cue: {
                 type: Object,
-                notify: true,
-                value: () => {
-                    let cue = new VTTCue(0, 60, "<c.srtPlayer> value </c.srtPlayer>");
-                    return Object.assign(cue, {
-                        position: 3,
-                        line: 100,
-                        size: 100
-                    })
-                }
+                notify: true
             },
             css: {
                 type: String,
-                notify: true,
-                value: () => {
-                    var customSubtitleCss = '::cue(.srtPlayer) \
-                    {\
-                        background-color:yellow;\
-                    }';
-                    return css_beautify(customSubtitleCss);
-                }
-            }
+                notify: true
+            },
+
+            settings:{
+                type: Object,
+                notify:true
+            },
         }
-    }
-
-    _setCss(css){
-        this.css=css;
-    }
-
-    _setSubtitleProperties(properties){
-        Object.assign(this.cue, properties);
-        ["line","position","size","align", "vertical"].forEach((path)=>this.notifyPath(`cue.${path}`));
     }
 
     save() {
@@ -71,6 +36,7 @@ class PlussubOptionElement extends Polymer.Element {
             vertical: this.cue.vertical
         }));
 
+        srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.enableDebugConsole(this.settings.enableDebugConsole));
     }
 
     reset() {

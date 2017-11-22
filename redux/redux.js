@@ -53,6 +53,7 @@ srtPlayer.ReduxImpl = srtPlayer.ReduxImpl || ((initialState,config) => {
                 case srtPlayer.Descriptor.SUBTITLE_DOWNLOAD.SUBTITLE_DOWNLOAD.PUB.RESET:
                     return {...state, subtitleDownload: subtitleDownloadReducers(state.subtitleDownload, action)};
                 case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE:
+                case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.ENABLE_CONSOLE:
                     return {...state, debug: debugReducers(state.debug, action)};
                 default:
                     return state
@@ -270,6 +271,8 @@ srtPlayer.ReduxImpl = srtPlayer.ReduxImpl || ((initialState,config) => {
             switch (action.type) {
                 case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.TOGGLE_CONSOLE:
                     return {...state, showDebugConsole: !state.showDebugConsole};
+                case srtPlayer.Descriptor.DEBUG.DEBUG.PUB.ENABLE_CONSOLE:
+                    return {...state, enableDebugConsole: action.payload};
                 default:
                     return state;
             }
@@ -322,7 +325,7 @@ srtPlayer.ReduxImpl = srtPlayer.ReduxImpl || ((initialState,config) => {
 
 srtPlayer.Redux = srtPlayer.Redux || srtPlayer.ReduxImpl( {
 
-        schemaVersion: 250,
+        schemaVersion: 252,
 
         appState: {
             selectedMode: 0
@@ -330,7 +333,9 @@ srtPlayer.Redux = srtPlayer.Redux || srtPlayer.ReduxImpl( {
 
         option: {
             css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
-            subtitleProperties: {} //cue properties
+            subtitleProperties: {
+                position:50
+            } //cue properties
         },
 
         subtitle: {
@@ -385,6 +390,7 @@ srtPlayer.Redux = srtPlayer.Redux || srtPlayer.ReduxImpl( {
         debug: {
             messageBridge: true,
             showDebugConsole: false,
+            enableDebugConsole:false,
             redux: false,
             reduxStore: false,
             disableStoreReduxState: false
