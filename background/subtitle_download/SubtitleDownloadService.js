@@ -9,7 +9,7 @@ if (typeof exports !== 'undefined') {
 
 srtPlayer.SubtitleDownloadService = srtPlayer.SubtitleDownloadService || ((fetch = window.fetch) => {
 
-        let previousLink = srtPlayer.Redux.getState().subtitleSearch.downloadLink;
+        let previousLink = srtPlayer.Redux.getState().subtitleDownload.downloadLink;
         let previousResultId = srtPlayer.Redux.getState().subtitleSearch.resultId;
 
         let unsubscribe = srtPlayer.Redux.subscribe(() => {

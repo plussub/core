@@ -10,7 +10,7 @@ if (typeof exports !== 'undefined') {
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (() => {
 
     return {
-        getInitialState: () => null,
+        loadState: () => null,
         shouldStoreState:false,
         createStore:(reducers,initialState)=>Redux.createStore(reducers, initialState),
     }

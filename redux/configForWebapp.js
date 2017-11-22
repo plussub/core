@@ -8,7 +8,7 @@ if (typeof exports !== 'undefined') {
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (()=>{
     
         return {
-            getInitialState:() => localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : null,
+            loadState:() => localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : null,
             shouldStoreState:true,
             createStore:(reducers,initialState)=>Redux.createStore(reducers, initialState)
         }

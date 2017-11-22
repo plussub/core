@@ -5,7 +5,7 @@
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (()=>{
 
     return {
-        getInitialState:() => null,
+        loadState:() => null,
         shouldStoreState:false,
         createStore:(reducers,initialState) => {
             //Store2

@@ -23,7 +23,7 @@ gulp.task('bower',function(){
 });
 
 gulp.task('mocha_unit', function() {
-    return gulp.src(['background/**/test/*.js','descriptor/test/*.js'], { read: false })
+    return gulp.src(['background/**/test/*.js','descriptor/test/*.js','redux/test/*.js'], { read: false })
         .pipe(mocha({ reporter: 'list'}))
         .on('error', gutil.log);
 });

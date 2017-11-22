@@ -6,76 +6,7 @@ if (typeof exports !== 'undefined') {
 }
 
 
-srtPlayer.Redux = srtPlayer.Redux || (() => {
-
-        let initialState = {
-
-            appState: {
-                selectedMode: 0
-            },
-
-            option: {
-                css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
-                subtitleProperties: {} //cue properties
-            },
-
-            subtitle: {
-                id: -1,
-                parsed: [],
-                pastOffsetTime: 0,
-                offsetTime: 0,
-                offsetTimeApplied: true,
-                raw: ""
-            },
-
-            movieSearch: {
-                query: "",
-                isLoading: false,
-                resultId: -1,
-                result: [],
-                selected: -1,
-            },
-
-            movieInfo: {
-                id: -1,
-                title: "-",
-                poster: null,
-                src: ""
-            },
-
-            subtitleSearch: {
-                imdbId: "",
-                language: "eng",
-                isLoading: false,
-                resultId: -1,
-                result: [],
-                selected: -1,
-            },
-
-            subtitleDownload: {
-                downloadLink: "",
-                isLoading: false,
-                resultId: -1,
-                result: ""
-            },
-
-            //videoMeta is transient
-            videoMeta: {
-                tickInMs: 0,
-                foundVideo: false,
-                currentVideos: []
-            },
-
-            errors: [],
-
-            debug: {
-                messageBridge: true,
-                showDebugConsole: false,
-                redux: false,
-                reduxStore: false,
-                disableStoreReduxState: false
-            }
-        };
+srtPlayer.ReduxImpl = srtPlayer.ReduxImpl || ((initialState,config) => {
 
         function reducers(state = initialState, action) {
 
@@ -346,17 +277,17 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
 
         //move load fn to own js
         //use json schema for validation? use strategy pattern to test different approaches
-        let _initialState = srtPlayer.ReduxConfig.getInitialState();
-        _initialState = _initialState ? _initialState : initialState;
+        let loadedState = config.loadState();
 
-        //check if all properties exists?
-
-
-        if (_initialState.debug.reduxStore) {
-            console.log(`load state: ${_initialState}`);
+        if(!loadedState || loadedState.schemaVersion < initialState.schemaVersion) {
+            loadedState = initialState;
         }
 
-        let store = srtPlayer.ReduxConfig.createStore(reducers, _initialState);
+        if (loadedState.debug.reduxStore) {
+            console.log(`load state: ${loadedState}`);
+        }
+
+        let store = config.createStore(reducers, loadedState);
         //fake ready event
         if (typeof store.ready === 'undefined') {
             store.ready = () => ((async () => ""))();
@@ -365,7 +296,7 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
         // let store = wrapStore(Redux.createStore(reducers, _initialState));
         store.subscribe(() => {
             let state = Object.assign({}, store.getState());
-            if (!srtPlayer.ReduxConfig.shouldStoreState || state.debug.disableStoreReduxState) {
+            if (!config.shouldStoreState || state.debug.disableStoreReduxState) {
                 return;
             }
             //It makes no sense to safe founded videos or the current time of the video
@@ -387,4 +318,73 @@ srtPlayer.Redux = srtPlayer.Redux || (() => {
             dispatch: store.dispatch,
             getState: () => store.getState()
         }
-    })();
+    });
+
+srtPlayer.Redux = srtPlayer.Redux || srtPlayer.ReduxImpl( {
+
+        appState: {
+            selectedMode: 0
+        },
+
+        option: {
+            css: "#editCSS{ font-size:20px;} \n ::cue(.srtPlayer){ \/* background-color:black; \n color:white; \n font-size:20px; *\/}",
+            subtitleProperties: {} //cue properties
+        },
+
+        subtitle: {
+            id: -1,
+            parsed: [],
+            pastOffsetTime: 0,
+            offsetTime: 0,
+            offsetTimeApplied: true,
+            raw: ""
+        },
+
+        movieSearch: {
+            query: "",
+            isLoading: false,
+            resultId: -1,
+            result: [],
+            selected: -1,
+        },
+
+        movieInfo: {
+            id: -1,
+            title: "-",
+            poster: null,
+            src: ""
+        },
+
+        subtitleSearch: {
+            imdbId: "",
+            language: "eng",
+            isLoading: false,
+            resultId: -1,
+            result: [],
+            selected: -1,
+        },
+
+        subtitleDownload: {
+            downloadLink: "",
+            isLoading: false,
+            resultId: -1,
+            result: ""
+        },
+
+        //videoMeta is transient
+        videoMeta: {
+            tickInMs: 0,
+            foundVideo: false,
+            currentVideos: []
+        },
+
+        errors: [],
+
+        debug: {
+            messageBridge: true,
+            showDebugConsole: false,
+            redux: false,
+            reduxStore: false,
+            disableStoreReduxState: false
+        }
+    },srtPlayer.ReduxConfig);

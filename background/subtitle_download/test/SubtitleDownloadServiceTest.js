@@ -14,7 +14,7 @@ let Descriptor = require('../../../descriptor/Descriptor.js').srtPlayer.Descript
 const srtInflaterResponseToAsciiMock = require('./InflaterMock.js').srtMock.srtInflaterResponseToAsciiMock;
 
 
-describe('SubtitleProvider', () => {
+describe('SubtitleDownloadService', () => {
 
     let subtitleDownloadService;
     const BASE_URL = 'https://app.plus-sub.com/subtitle';
@@ -40,11 +40,13 @@ describe('SubtitleProvider', () => {
 
         fakeFetch.mock(`https://somedownloadlink`, downloadLinkResult);
 
+        let alreadyValidated = false;
         let unsubscribe = redux.subscribe(() => {
             let subtitleDownload = redux.getState().subtitleDownload;
-            if (subtitleDownload.result === downloadLinkResult) {
+            if (!alreadyValidated && subtitleDownload.result === downloadLinkResult) {
                 unsubscribe();
                 done();
+                alreadyValidated=true;
             }
         });
 
@@ -66,7 +68,7 @@ describe('SubtitleProvider', () => {
 
         let previousErrors = [];
         let unsubscribe = redux.subscribe(() => {
-            let subtitleSearch = redux.getState().subtitleDownload;
+            let subtitleDownload = redux.getState().subtitleDownload;
             let errors = redux.getState().errors;
             if (previousErrors.length === errors.length) {
                 return;
@@ -75,7 +77,7 @@ describe('SubtitleProvider', () => {
 
             if (errors.length > 0) {
                 unsubscribe();
-                validateResult(subtitleSearch, errors);
+                validateResult(subtitleDownload, errors);
                 done();
             }
         });
@@ -101,7 +103,7 @@ describe('SubtitleProvider', () => {
 
         let previousErrors = [];
         let unsubscribe = redux.subscribe(() => {
-            let subtitleSearch = redux.getState().subtitleDownload;
+            let subtitleDownload = redux.getState().subtitleDownload;
             let errors = redux.getState().errors;
             if (previousErrors.length === errors.length) {
                 return;
@@ -110,7 +112,7 @@ describe('SubtitleProvider', () => {
 
             if (errors.length > 0) {
                 unsubscribe();
-                validateResult(subtitleSearch, errors);
+                validateResult(subtitleDownload, errors);
                 done();
             }
         });
