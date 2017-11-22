@@ -322,6 +322,8 @@ srtPlayer.ReduxImpl = srtPlayer.ReduxImpl || ((initialState,config) => {
 
 srtPlayer.Redux = srtPlayer.Redux || srtPlayer.ReduxImpl( {
 
+        schemaVersion: 250,
+
         appState: {
             selectedMode: 0
         },
