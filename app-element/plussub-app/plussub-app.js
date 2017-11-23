@@ -13,6 +13,9 @@ class PlussubAppElement extends Polymer.Element {
             this.$.selectionModePages.selected = appState.selectedMode;
             this.$.selectionModeTabs.selected = appState.selectedMode;
             this.selectMode = appState.selectedMode;
+
+            let debug = srtPlayer.Redux.getState().debug;
+            this.$.toggleConsoleBtn.hidden = !debug.enableDebugConsole;
         });
 
         srtPlayer.Redux.store.ready().then(() => {

@@ -42,7 +42,7 @@
                 <div style="display:flex; justify-content: space-around;">
                     <paper-button raised="" on-tap="openSettingsPage" primary="">Open Settings</paper-button>
                     <paper-fab mini="" id="eject" icon="eject" on-tap="reset"></paper-fab>
-                    <paper-button raised="" on-tap="debugConsole" primary="">Debug Console</paper-button>
+                    <paper-button id="toggleConsoleBtn" on-tap="debugConsole" hidden$="{{debugConsoleIsHidden}}">Debug Console</paper-button>
                 </div>
                 <notification-service></notification-service>
             </div>
