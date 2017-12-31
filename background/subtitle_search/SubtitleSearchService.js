@@ -37,7 +37,7 @@ srtPlayer.SubtitleSearchService = srtPlayer.SubtitleSearchService || ((fetch = w
             }
 
             try {
-                const response = await fetch(`https://app.plus-sub.com/subtitle/${imdbId}/${language}`);
+                const response = await fetch(`https://app.plus-sub.com/v2/subtitle/${imdbId}/${language}`);
                 if (response.status !== 200) {
                     srtPlayer.Redux.dispatch(srtPlayer.ActionCreators.setSubtitleSearchResult({
                         message:`Failed to search subtitle. Status ${response.status}`,

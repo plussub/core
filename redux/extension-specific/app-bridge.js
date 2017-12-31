@@ -47,9 +47,7 @@ srtPlayer.AppBridge = srtPlayer.AppBridge || ((store) => {
         return {
 
             ready: () => {
-                console.log("plussub: ...");
                 return (async () => {
-                    console.log("plussub: chrome bridge ready");
                     state = await sendMessage("InitialState");
                 })();
             },

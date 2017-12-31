@@ -17,7 +17,7 @@ const srtInflaterResponseToAsciiMock = require('./InflaterMock.js').srtMock.srtI
 describe('SubtitleDownloadService', () => {
 
     let subtitleDownloadService;
-    const BASE_URL = 'https://app.plus-sub.com/subtitle';
+    const BASE_URL = 'https://app.plus-sub.com/v2/subtitle';
 
 
     let fakeFetch;

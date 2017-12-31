@@ -19,7 +19,6 @@ srtPlayer.ActionCreators = srtPlayer.ActionCreators || (() => {
 
         return {
 
-
             parseRawSubtitle: (raw) => {
                 return {
                     type: srtPlayer.Descriptor.SUBTITLE.PARSER.PUB.PARSE,

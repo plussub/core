@@ -30,16 +30,10 @@ srtPlayer.BackgroundBridge = srtPlayer.BackgroundBridge || ((store) => {
 
 
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-                console.warn(request);
 
                 if (sender.tab) {
                     registeredTabs.add(sender.tab.id);
                 }
-
-                console.log(sender.tab ?
-                    "from a content script:" + sender.tab.url :
-                    "from the extension");
-
 
                 switch (request.command) {
                     case "InitialState":

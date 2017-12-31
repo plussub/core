@@ -17,7 +17,7 @@ const DEFAULT_SUBTITLE_SEARCH_RESULT = require('./expectedResponse.js').DEFAULT_
 describe('SubtitleSearchService', () => {
 
     let subtitleSearchService;
-    const BASE_URL = 'https://app.plus-sub.com/subtitle';
+    const BASE_URL = 'https://app.plus-sub.com/v2/subtitle';
 
 
     let fakeFetch;
