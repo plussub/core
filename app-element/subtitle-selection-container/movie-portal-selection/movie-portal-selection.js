@@ -87,7 +87,7 @@ class PlussubMoviePortalSelectionElement extends Polymer.Element {
             let tmdbId = JSON.parse(this.$.movieSelection.getItems()[0]).id;
             const response = await fetch('https://app.plus-sub.com/v2/movie/information/' + decodeURIComponent(tmdbId));
             let imdbId = (await response.json()).imdbId;
-            console.log(imdbId);
+
             let searchResult = srtPlayer.Redux.getState().movieSearch.result;
             let index = searchResult.indexOf(searchResult.find(e => e.imdbID === imdbId));
 
