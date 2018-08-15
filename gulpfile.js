@@ -4,10 +4,7 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var gutil = require('gulp-util');
-var babel = require('babel-core/register');
-var bower = require('gulp-bower');
 var runSequence = require('run-sequence');
-var del = require('del');
 
 
 gulp.task('build', function(callback) {

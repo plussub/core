@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const requirejs = require('requirejs');
 
 //application dependencies
-const Redux = require('../../../redux/index');
+const Redux = require('redux');
 
 describe('Redux', ()=> {
 

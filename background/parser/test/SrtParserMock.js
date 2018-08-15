@@ -3,7 +3,6 @@
  */
 var srtMock = srtMock || {};
 if (typeof exports !== 'undefined') {
-    require('es6-promise').polyfill();
     exports.srtMock = srtMock;
 }
 

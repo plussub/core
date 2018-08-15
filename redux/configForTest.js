@@ -4,7 +4,7 @@
 var srtPlayer = srtPlayer || {};
 if (typeof exports !== 'undefined') {
     exports.srtPlayer = srtPlayer;
-    var Redux = require('../../redux/index');
+    var Redux = require('redux');
 }
 
 srtPlayer.ReduxConfig = srtPlayer.ReduxConfig || (() => {
